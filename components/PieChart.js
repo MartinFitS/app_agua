@@ -1,39 +1,46 @@
 import React from 'react';
-import { PieChart } from 'react-native-chart-kit';
-import { Dimensions, Text, View } from 'react-native';
+import { View, Text } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
 
-const { width } = Dimensions.get('window');
+const CircularProgress = ({ value, max, color = '#3E0E0E', backgroundColor = '#8B3A3A', textColor }) => {
+    const size = 120; // Tamaño del círculo
+    const strokeWidth = 15;
+    const radius = (size - strokeWidth) / 2;
+    const circumference = 2 * Math.PI * radius;
+    const progress = (value / max) * circumference;
 
-const PieChartComponent = ({ data, centerText, backgroundColor }) => {
     return (
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <PieChart
-                data={data}
-                width={width / 2 - 20}
-                height={200}
-                chartConfig={{
-                    backgroundColor,
-                    backgroundGradientFrom: backgroundColor,
-                    backgroundGradientTo: backgroundColor,
-                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    strokeWidth: 2,
-                    barPercentage: 0.5,
-                    useShadowColorFromDataset: false,
-                }}
-                accessor="population"
-                backgroundColor="transparent"
-                center={[50, 0]}
-                absolute
-                hasLegend={false}
-                holeRadius={60}
-                innerRadius={50}
-            />
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'black' }}>
-                {centerText}
+        <View style={{ alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <Svg width={size} height={size}>
+                {/* Círculo de fondo */}
+                <Circle
+                    cx={size / 2}
+                    cy={size / 2}
+                    r={radius}
+                    stroke="#E0E0E0" // Color de fondo más claro
+                    strokeWidth={strokeWidth}
+                    fill="none"
+                />
+                {/* Círculo de progreso */}
+                <Circle
+                    cx={size / 2}
+                    cy={size / 2}
+                    r={radius}
+                    stroke={color}
+                    strokeWidth={strokeWidth}
+                    fill="none"
+                    strokeDasharray={circumference}
+                    strokeDashoffset={circumference - progress}
+                    strokeLinecap="round"
+                    rotation="-90"
+                    origin={`${size / 2}, ${size / 2}`}
+                />
+            </Svg>
+            <Text style={{ position: 'absolute', fontSize: 18, fontWeight: 'light', color: textColor }}>
+                {value} m³
             </Text>
         </View>
     );
 };
 
-export default PieChartComponent;
+export default CircularProgress;
