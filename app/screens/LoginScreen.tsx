@@ -1,124 +1,109 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { Text, TextInput, Button } from "react-native-paper";
+import { View, Image, StyleSheet } from "react-native";
+import { TextInput, Button, Checkbox, Text } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native"; 
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = () => {
+  const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [secureText, setSecureText] = useState(true);
+  const [remember, setRemember] = useState(false);
 
   return (
     <View style={styles.container}>
-      {/* Botón de regreso */}
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.backText}>Login</Text>
-      </TouchableOpacity>
-      
-      {/* Logo */}
-      <Image 
-        source={{ uri: "https://cuerpoacademico67ucol.com.mx/wp-content/uploads/2023/07/udec_2l-izq_negro-3.png" }} 
-        style={styles.logo} 
-      />
-      
-      {/* Texto de bienvenida */}
-      <Text style={styles.welcomeText}>Welcome Back</Text>
-      <Text style={styles.subText}>Sign In to your account</Text>
-      
-      {/* Campo de Email */}
+      <Image source={require("../../assets/img/logo_udc.png")} style={styles.logo} />
+
       <TextInput
-        label="Email Address"
-        mode="outlined"
-        style={styles.input}
+        label="Email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
-      />
-      
-      {/* Campo de Contraseña */}
-      <TextInput
-        label="Password"
-        mode="outlined"
         style={styles.input}
-        secureTextEntry={secureText}
+        theme={{ colors: { primary: "#1D61E7", text: "black" } }}
+      />
+
+      <TextInput
+        label="Contraseña"
         value={password}
         onChangeText={setPassword}
-        right={<TextInput.Icon icon={secureText ? "eye-off" : "eye"} onPress={() => setSecureText(!secureText)} />}
+        secureTextEntry
+        style={styles.input}
+        theme={{ colors: { primary: "#1D61E7", text: "black" } }}
       />
-      
-      {/* Forgot Password */}
-      <TouchableOpacity onPress={() => console.log("Forgot Password Pressed")}>
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-      </TouchableOpacity>
-      
-      {/* Botón de Login */}
-      <Button mode="contained" style={styles.loginButton} onPress={() => console.log("Login")}>Login</Button>
-      
-      {/* Link de Registro */}
-      <Text style={styles.registerText}>
-        Don't have an account? <Text style={styles.registerLink} onPress={() => navigation.navigate("Register")}>Sign Up</Text>
-      </Text>
+
+      <View style={styles.row}>
+        <View style={styles.rememberContainer}>
+          <Checkbox
+            status={remember ? "checked" : "unchecked"}
+            onPress={() => setRemember(!remember)}
+            color="#1D61E7"
+            uncheckedColor="gray"
+          />
+          <Text style={{ color: "black" }} onPress={() => setRemember(!remember)}>
+            Recordar contraseña
+          </Text>
+        </View>
+
+        <Text style={styles.forgot} onPress={() => navigation.navigate("")}>
+          ¿Olvidaste tu contraseña?
+        </Text>
+      </View>
+
+      <Button mode="contained" style={styles.button} textColor="white" onPress={() => navigation.navigate("HomeScreen")}>
+        Iniciar sesión
+      </Button>
+
+      <Button
+        mode="text"
+        onPress={() => navigation.navigate("RegisterScreen")}
+        contentStyle={{ flexDirection: "row" }}
+      >
+        <Text style={{ color: "black" }}>¿No tienes una cuenta? </Text> 
+        <Text style={{ color: "#1D61E7", fontWeight: "bold" }}>Regístrate</Text>
+      </Button>
     </View>
   );
 };
 
-// Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    justifyContent: "flex-start",
-    backgroundColor: "white",
-  },
-  backText: {
-    textAlign: "left",
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#B0B0B0",
-    marginBottom: 0,
+    alignItems: "center",
+    padding: 40,
+    backgroundColor: "#fff",
   },
   logo: {
-    width: 120,
-    height: 50,
-    alignSelf: "center",
-    marginBottom: 20,
-    resizeMode: "contain",
-  },
-  welcomeText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 5,
-  },
-  subText: {
-    fontSize: 14,
-    color: "gray",
-    textAlign: "center",
-    marginBottom: 20,
+    width: 150,
+    height: 150,
+    marginBottom: 80,
   },
   input: {
+    width: "100%",
+    marginBottom: 25,
+    backgroundColor: "white",
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
     marginBottom: 10,
   },
-  forgotPassword: {
-    textAlign: "right",
-    color: "#D2691E",
-    fontWeight: "bold",
+  rememberContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  button: {
+    width: "100%",
     marginBottom: 20,
+    marginTop: 40,
+    backgroundColor: "#1D61E7",
   },
-  loginButton: {
-    backgroundColor: "#283593",
-    paddingVertical: 5,
-    borderRadius: 10,
-  },
-  registerText: {
-    textAlign: "center",
-    marginTop: 20,
-    fontSize: 14,
-    color: "gray",
-  },
-  registerLink: {
-    color: "#D2691E",
+  forgot: {
+    color: "#1D61E7",
     fontWeight: "bold",
+    paddingLeft: 10,
   },
 });
 
