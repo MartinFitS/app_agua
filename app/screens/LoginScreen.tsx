@@ -66,7 +66,7 @@ const LoginScreen = () => {
             </TouchableOpacity>
           </View>
 
-          <Button mode="contained" style={styles.button} textColor="white" onPress={() => navigation.navigate("HomeScreen")}>
+          <Button mode="contained" style={styles.button} textColor="white" onPress={() => navigation.navigate("Main")}>
             Log In
           </Button>
 

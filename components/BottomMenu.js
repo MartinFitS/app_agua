@@ -1,10 +1,11 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons'; 
+import { View, Text } from "react-native";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
+// Definición de las pantallas principales
 const HomeScreen = () => <View><Text>Home</Text></View>;
 const ConsumoScreen = () => <View><Text>Consumo</Text></View>;
 const PronosticoScreen = () => <View><Text>Pronóstico</Text></View>;
@@ -18,16 +19,12 @@ const BottomMenu = () => {
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
-          if (route.name === 'Home') {
-            iconName = 'home';
-          } else if (route.name === 'Consumo') {
-            iconName = 'bar-chart';
-          } else if (route.name === 'Pronóstico') {
-            iconName = 'cloud';
-          } else if (route.name === 'Análisis') {
-            iconName = 'analytics';
-          } else if (route.name === 'Perfil') {
-            iconName = 'person';
+          switch (route.name) {
+            case 'Home': iconName = 'home'; break;
+            case 'Consumo': iconName = 'bar-chart'; break;
+            case 'Pronóstico': iconName = 'cloud'; break;
+            case 'Análisis': iconName = 'analytics'; break;
+            case 'Perfil': iconName = 'person'; break;
           }
 
           return <Icon name={iconName} size={size} color={color} />;
