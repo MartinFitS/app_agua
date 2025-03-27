@@ -6,8 +6,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
-import BottomMenu from "../components/BottomMenu";  // Asegúrate de importar correctamente el BottomMenu
 import ConsumoScreen from "./screens/ConsumoScreen";
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,26 +23,29 @@ const AuthStack = () => (
 // Navegador con pestañas en la parte inferior
 const MainTabs = () => (
   <Tab.Navigator
-    screenOptions={({ route }) => ({
-      tabBarIcon: ({ color, size }) => {
-        let iconName;
-        if (route.name === 'Home') {
-          iconName = 'home';
-        } else if (route.name === 'Consumo') {
-          iconName = 'bar-chart';
-        } else if (route.name === 'Pronóstico') {
-          iconName = 'cloud';
-        } else if (route.name === 'Análisis') {
-          iconName = 'analytics';
-        } else if (route.name === 'Perfil') {
-          iconName = 'person';
-        }
-        return <Icon name={iconName} size={size} color={color} />;
-      },
-    })}
+  
+  screenOptions={({ route }) => ({
+    headerShown: false, // Elimina el encabezado
+    tabBarIcon: ({ color, size }) => {
+      let iconName;
+      if (route.name === 'Home') {
+        iconName = 'home';
+      } else if (route.name === 'Consumo') {
+        iconName = 'bar-chart';
+      } else if (route.name === 'Pronóstico') {
+        iconName = 'cloud';
+      } else if (route.name === 'Análisis') {
+        iconName = 'analytics';
+      } else if (route.name === 'Perfil') {
+        iconName = 'person';
+      }
+      return <Icon name={iconName} size={size} color={color} />;
+    },
+  })}
   >
     <Tab.Screen name="Home" component={HomeScreen} />
     <Tab.Screen name="Consumo" component={ConsumoScreen} />
+
 
   </Tab.Navigator>
 );
