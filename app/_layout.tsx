@@ -1,13 +1,13 @@
-import React from "react";
+import React from "react"; 
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { PaperProvider } from "react-native-paper";
-import Icon from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons'; 
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ConsumoScreen from "./screens/ConsumoScreen";
-
+import PronosticoScreen from "./screens/PronosticoScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,30 +23,28 @@ const AuthStack = () => (
 // Navegador con pestañas en la parte inferior
 const MainTabs = () => (
   <Tab.Navigator
-  
-  screenOptions={({ route }) => ({
-    headerShown: false, // Elimina el encabezado
-    tabBarIcon: ({ color, size }) => {
-      let iconName;
-      if (route.name === 'Home') {
-        iconName = 'home';
-      } else if (route.name === 'Consumo') {
-        iconName = 'bar-chart';
-      } else if (route.name === 'Pronóstico') {
-        iconName = 'cloud';
-      } else if (route.name === 'Análisis') {
-        iconName = 'analytics';
-      } else if (route.name === 'Perfil') {
-        iconName = 'person';
-      }
-      return <Icon name={iconName} size={size} color={color} />;
-    },
-  })}
+    screenOptions={({ route }) => ({
+      headerShown: false, // Elimina el encabezado
+      tabBarIcon: ({ color, size }) => {
+        let iconName;
+        if (route.name === 'Home') {
+          iconName = 'home';
+        } else if (route.name === 'Consumo') {
+          iconName = 'bar-chart';
+        } else if (route.name === 'Pronostico') {
+          iconName = 'cloud';
+        } else if (route.name === 'Analisis') {
+          iconName = 'analytics';
+        } else if (route.name === 'Perfil') {
+          iconName = 'person';
+        }
+        return <Ionicons name={iconName} size={size} color={color} />; 
+      },
+    })}
   >
     <Tab.Screen name="Home" component={HomeScreen} />
     <Tab.Screen name="Consumo" component={ConsumoScreen} />
-
-
+    <Tab.Screen name="Pronostico" component={PronosticoScreen} />
   </Tab.Navigator>
 );
 

@@ -79,7 +79,6 @@ const HomeScreen = () => {
                 <Text style={styles.alertaSubTexto}>Ve al apartado de analíticas para más información.</Text>
             </View>
 
-
         </ScrollView>
     );
 };
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
         height: 120,
         alignSelf: "center",
         marginBottom: 10,
-        marginTop: 80
+        marginTop: 50
     },
     saludo: {
         fontSize: 18,
