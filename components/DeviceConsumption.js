@@ -2,14 +2,15 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
-const DeviceGraph = ({ value, max, deviceName, size = 240, strokeWidth = 30, color = '#2751DB', backgroundColor = '#E0E0E0', textColor = '#000' }) => {
+const DeviceGraph = ({ value, max, name, size = 220, strokeWidth = 20, color = '#17bf42', backgroundColor = '#E0E0E0', textColor = '#000' }) => {
     const radius = (size - strokeWidth) / 2;
     const circumference = 2 * Math.PI * radius;
     const progress = (value / max) * circumference;
 
+
     return (
         <View style={styles.container}>
-            <Text style={styles.deviceTitle}>Dispositivo: {deviceName}</Text>
+            <Text style={styles.deviceTitle}>{name}</Text>
             <View style={styles.graphWrapper}>
                 <Svg width={size} height={size}>
                     <Circle cx={size / 2} cy={size / 2} r={radius} stroke={backgroundColor} strokeWidth={strokeWidth} fill="none" />
@@ -23,9 +24,9 @@ const DeviceGraph = ({ value, max, deviceName, size = 240, strokeWidth = 30, col
 
 const styles = StyleSheet.create({
     container: { alignItems: 'center', justifyContent: 'center', paddingBottom: 20 },
-    deviceTitle: { fontSize: 22, fontWeight: 'bold', marginBottom: 10, textAlign: 'center' },
+    deviceTitle: { fontSize: 22, fontWeight: 'light', marginBottom: 15, textAlign: 'center', marginTop: 15},
     graphWrapper: { position: 'relative', alignItems: 'center', justifyContent: 'center' },
-    valueText: { position: 'absolute', fontSize: 36, fontWeight: 'bold', color: '#000' }
+    valueText: { position: 'absolute', fontSize: 30, fontWeight: 'bold', color: '#000' }
 });
 
 export default DeviceGraph;

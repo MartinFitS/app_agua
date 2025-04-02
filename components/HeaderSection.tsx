@@ -6,7 +6,7 @@ const HeaderSection = () => (
     <View style={styles.header}>
         <Ionicons name="information-circle-outline" size={24} color="black" /> 
         <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Imprimir factura</Text>
+            <Text style={styles.buttonText}>Descargar factura</Text>
         </TouchableOpacity>
     </View>
 );
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
+        marginTop: 40,
         borderRadius: 10,
         marginBottom: 10
     },

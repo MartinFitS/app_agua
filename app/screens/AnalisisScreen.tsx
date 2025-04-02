@@ -6,6 +6,7 @@ import DeviceSelector from "../../components/DeviceSelector";
 import PeriodSelector from "../../components/PeriodSelector";
 
 const AnalisisScreen = () => {
+
     const devices = [
         { name: 'Baño', value: 40, max: 100, icon: require('../../assets/img/bano.png') },
         { name: 'Lavamanos', value: 20, max: 100, icon: require('../../assets/img/lavamanos.png') },
@@ -20,13 +21,21 @@ const AnalisisScreen = () => {
         // Aquí puedes agregar lógica adicional si es necesario para actualizar los datos según el periodo
     };
 
+    console.log(selectedDevice)
+
     return (
         <ScrollView style={styles.container}>
             <View>
                 {/* Pasar las propiedades de periodo y cambio de periodo */}
                 <PeriodSelector selectedPeriod={selectedPeriod} onPeriodChange={handlePeriodChange} />
-                <DeviceGraph value={selectedDevice.value} max={selectedDevice.max} />
-                <DeviceSelector devices={devices} onSelect={setSelectedDevice} />
+                <DeviceGraph value={selectedDevice.value} name={selectedDevice.name} max={selectedDevice.max} />
+             
+
+<DeviceSelector
+  devices={devices}
+  selectedDevice={selectedDevice}
+  onSelect={setSelectedDevice}
+/>
                 <AlertSection />
             </View>
         </ScrollView>
@@ -35,6 +44,7 @@ const AnalisisScreen = () => {
 
 const styles = {
 container: {
+    paddingTop: 55,
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',

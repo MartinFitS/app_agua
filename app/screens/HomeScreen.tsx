@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
 import { Picker } from "react-native-ui-lib"; // Importamos Picker de rnulib
 import CircularProgress from "../../components/PieChart";
-
+import AlertSection from "@/components/AlertSection";
 const HomeScreen = () => {
     const currentDate = "16 de marzo del 2025";
 
@@ -72,12 +72,7 @@ const HomeScreen = () => {
             </View>
 
             {/* Alerta */}
-            <View style={styles.alerta}>
-                <Text style={styles.alertaTitulo}>⚠️ Precaución</Text>
-                <Text style={styles.alertaTexto}>El consumo actual supera los límites</Text>
-                <Text style={styles.alertaSubTexto}>Posible fuga en un mingitorio</Text>
-                <Text style={styles.alertaSubTexto}>Ve al apartado de analíticas para más información.</Text>
-            </View>
+            <AlertSection/>
 
         </ScrollView>
     );

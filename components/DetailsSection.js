@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const DetailsSection = ({ selectedTariff, selectedPeriod, viewType }) => {
-  // Datos para consumo según tarifa 
   const consumoHoy = {
     'Tarifa 1': {
       consumptionPerDay: '20 m³',
@@ -39,7 +38,6 @@ const DetailsSection = ({ selectedTariff, selectedPeriod, viewType }) => {
     },
   };
 
-  // Datos para pronóstico según tarifa 
   const pronosticoHoy = {
     'Tarifa 1': {
       consumptionPerDay: '18 m³',
@@ -85,7 +83,6 @@ const DetailsSection = ({ selectedTariff, selectedPeriod, viewType }) => {
     },
   };
 
-  // Determinación de los datos a mostrar según periodo y tipo de vista (consumo o pronóstico)
   let details;
   if (viewType === 'Consumo') {
     if (selectedPeriod === 'Hoy') {
@@ -98,7 +95,7 @@ const DetailsSection = ({ selectedTariff, selectedPeriod, viewType }) => {
             <InfoCard title="Promedio de consumo por día" value={details.averageConsumption} fullWidth />
           </View>
           <View style={styles.rowBottom}>
-            <InfoCard title="Costo actual" value={details.currentCost} fullWidth />
+            <InfoCard title="Costo actual" value={details.currentCost} fullWidthSingle />
           </View>
         </View>
       );
@@ -112,7 +109,7 @@ const DetailsSection = ({ selectedTariff, selectedPeriod, viewType }) => {
             <InfoCard title="Promedio de consumo" value={details.averageConsumption} fullWidth />
           </View>
           <View style={styles.rowBottom}>
-            <InfoCard title="Costo actual" value={details.currentCost} fullWidth />
+            <InfoCard title="Costo actual" value={details.currentCost} fullWidthSingle />
           </View>
         </View>
       );
@@ -139,10 +136,10 @@ const DetailsSection = ({ selectedTariff, selectedPeriod, viewType }) => {
         <View style={styles.detailsContainer}>
           <Text style={styles.titleDetalles}>Detalles</Text>
           <View style={styles.rowTop}>
-            <InfoCard title="Consumo de agua en bimestre" value={details.nextBimonth} fullWidth />
+            <InfoCard title="Consumo de agua en bimestre" value={details.nextBimonth} fullWidthSingle />
           </View>
           <View style={styles.rowBottom}>
-            <InfoCard title="Gasto aproximado" value={details.estimatedCost} fullWidth />
+            <InfoCard title="Gasto aproximado" value={details.estimatedCost} fullWidthSingle />
           </View>
         </View>
       );
@@ -152,8 +149,12 @@ const DetailsSection = ({ selectedTariff, selectedPeriod, viewType }) => {
   return null;
 };
 
-const InfoCard = ({ title, value, fullWidth }) => (
-  <View style={[styles.infoCard, fullWidth && styles.fullWidth]}>
+const InfoCard = ({ title, value, fullWidth, fullWidthSingle }) => (
+  <View style={[
+    styles.infoCard,
+    fullWidth && styles.fullWidth,
+    fullWidthSingle && styles.fullWidthSingle
+  ]}>
     <Text style={styles.cardTitle}>{title}</Text>
     <Text style={styles.cardValue}>{value}</Text>
   </View>
@@ -174,14 +175,14 @@ const styles = StyleSheet.create({
   },
   rowTop: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     width: '100%',
+    marginBottom: 10,
   },
   rowBottom: {
     flexDirection: 'row',
     justifyContent: 'center',
     width: '100%',
-    marginTop: 10,
   },
   infoCard: {
     padding: 10,
@@ -191,12 +192,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: '#BCC1CA',
     borderWidth: 1,
-  },
-  halfWidth: {
-    width: '50%',
+    marginHorizontal: 5, // Espaciado entre tarjetas
   },
   fullWidth: {
-    width: '50%',
+    width: '48%',
+  },
+  fullWidthSingle: {
+    width: '100%',
+  },
+  cardTitle: {
+    fontSize: 14,
+    color: '#333',
+    textAlign: 'center',
   },
   cardValue: {
     fontSize: 16,

@@ -29,7 +29,6 @@ const ConsumoScreen = () => {
       <ConsumptionChart selectedPeriod={selectedPeriod} selectedTariff={selectedTariff} />
 
       {/* Selector de tarifa */}
-      <Text name="TitleTarifa" style={styles.titleTarifa}>Tarifas</Text>
       <Picker
         value={selectedTariff}
         onChange={(item) => {
@@ -56,13 +55,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   picker: {
-    marginTop: 20,
+    marginLeft: 12,
     marginBottom: 20,
     borderColor: 'BCC1CA',
     borderWidth: 1,
     width: '40%',
     height: 40,
-    borderRadius: 20,
+    borderRadius: 10,
     padding: 10,
   },
   titleTarifa: {

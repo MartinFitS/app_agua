@@ -1,27 +1,49 @@
 import React, { useState } from "react";
-import { 
-  View, Image, StyleSheet, TouchableOpacity, KeyboardAvoidingView, 
-  ScrollView, Platform, TouchableWithoutFeedback, Keyboard 
+import {
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
-import { TextInput, Button, Checkbox, Text } from "react-native-paper";
+import { TextInput, Button, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons"; // Asegúrate de tener instalada esta librería
+import { Ionicons } from "@expo/vector-icons";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
-  const [secureText, setSecureText] = useState(true); // Estado para ocultar/ver contraseña
+  const [secureText, setSecureText] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleLogin = () => {
+    const validEmail = "admin@ucol.mx";
+    const validPassword = "123456";
+
+    if (email === validEmail && password === validPassword) {
+      setErrorMessage("");
+      navigation.navigate("Main");
+    } else {
+      setErrorMessage("Credenciales incorrectas. Intenta nuevamente.");
+    }
+  };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"} // Ajusta la vista en iOS
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>  
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.container}>
-          <Image source={require("../../assets/img/logo_udc.png")} style={styles.logo} />
+          <Image
+            source={require("../../assets/img/logo_udc.png")}
+            style={styles.logo}
+          />
 
           <TextInput
             label="Email"
@@ -36,7 +58,7 @@ const LoginScreen = () => {
 
           <View style={styles.passwordContainer}>
             <TextInput
-              label="Password"
+              label="Contraseña"
               value={password}
               onChangeText={setPassword}
               secureTextEntry={secureText}
@@ -44,36 +66,49 @@ const LoginScreen = () => {
               theme={{ colors: { primary: "#1D61E7", outline: "#adaba3" } }}
               mode="outlined"
             />
-            <TouchableOpacity onPress={() => setSecureText(!secureText)} style={styles.eyeIcon}>
-              <Ionicons name={secureText ? "eye-off" : "eye"} size={24} color="gray" />
+            <TouchableOpacity
+              onPress={() => setSecureText(!secureText)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={secureText ? "eye-off" : "eye"}
+                size={24}
+                color="gray"
+              />
             </TouchableOpacity>
           </View>
 
-          <View style={styles.row}>
-            <View style={styles.rememberContainer}>
-              <Checkbox
-                status={remember ? "checked" : "unchecked"}
-                onPress={() => setRemember(!remember)}
+          <View style={styles.infoBox}>
+            <View style={styles.infoRow}>
+              <Ionicons
+                name="information-circle-outline"
+                size={20}
                 color="#1D61E7"
-                uncheckedColor="gray"
+                style={{ marginRight: 6 }}
               />
-              <Text style={styles.rememberText} onPress={() => setRemember(!remember)}>
-                Remember me
+              <Text style={styles.infoText}>
+                Usa tus credenciales institucionales del sistema SICEUC para iniciar sesión.
               </Text>
             </View>
-            <TouchableOpacity>
-              <Text style={styles.forgotPassword}>Forgot Password?</Text>
-            </TouchableOpacity>
           </View>
 
-          <Button mode="contained" style={styles.button} textColor="white" onPress={() => navigation.navigate("Main")}>
-            Log In
+          {errorMessage !== "" && (
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          )}
+
+          <Button
+            mode="contained"
+            style={styles.button}
+            textColor="white"
+            onPress={handleLogin}
+          >
+            Iniciar Sesión
           </Button>
 
-          <Button mode="text" onPress={() => navigation.navigate("RegisterScreen")}>
-            <Text style={{ color: "black" }}>Don't have an account? </Text> 
-            <Text style={styles.registerText}>Sign Up</Text>
-          </Button>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Developed by</Text>
+            <Text style={styles.footerText}>@MartinFits & @arielrosasc</Text>
+          </View>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -108,36 +143,43 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 15,
   },
-  row: {
+  infoBox: {
     width: "100%",
+    marginBottom: 12,
+    backgroundColor: "#E8F0FE",
+    padding: 10,
+    borderRadius: 8,
+  },
+  infoRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  rememberContainer: {
-    flexDirection: "row",
     alignItems: "center",
   },
-  rememberText: {
-    color: "black",
-    fontSize: 14,
-    marginLeft: 8,
-  },
-  forgotPassword: {
+  infoText: {
     color: "#1D61E7",
+    fontSize: 15,
+    fontWeight: "600",
+    flex: 1,
+  },
+  errorText: {
+    color: "red",
     fontSize: 14,
-    fontWeight: "bold",
+    marginBottom: 10,
+    alignSelf: "flex-start",
   },
   button: {
     width: "100%",
     paddingVertical: 8,
     backgroundColor: "#1D61E7",
     borderRadius: 10,
+    marginTop: 5,
   },
-  registerText: {
-    color: "#1D61E7",
-    fontWeight: "bold",
+  footer: {
+    marginTop: 40,
+    alignItems: "center",
+  },
+  footerText: {
+    color: "#999",
+    fontSize: 13,
   },
 });
 

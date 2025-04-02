@@ -21,7 +21,6 @@ const PronosticoScreen = () => {
       <ConsumptionChart selectedPeriod={selectedPeriod} selectedTariff={selectedTariff} />
 
       {/* Selector de tarifa */}
-      <Text name="TitleTarifa" style={styles.titleTarifa}>Tarifas</Text>
       <Picker
         value={selectedTariff}
         onChange={(item) => {
@@ -42,18 +41,20 @@ const PronosticoScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 60,
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',
   },
   picker: {
-    marginTop: 20,
+    marginTop: 5,
     marginBottom: 20,
+    marginLeft: 12,
     borderColor: 'BCC1CA',
     borderWidth: 1,
     width: '40%',
     height: 40,
-    borderRadius: 20,
+    borderRadius: 10,
     padding:10,
 },
   titleTarifa:{
