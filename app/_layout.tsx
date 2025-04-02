@@ -8,6 +8,8 @@ import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ConsumoScreen from "./screens/ConsumoScreen";
 import PronosticoScreen from "./screens/PronosticoScreen";
+import AnalisisScreen from "./screens/AnalisisScreen";
+import PerfilScreen from "./screens/PerfilScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -45,6 +47,9 @@ const MainTabs = () => (
     <Tab.Screen name="Home" component={HomeScreen} />
     <Tab.Screen name="Consumo" component={ConsumoScreen} />
     <Tab.Screen name="Pronostico" component={PronosticoScreen} />
+    <Tab.Screen name="Analisis" component={AnalisisScreen} />
+    <Tab.Screen name="Perfil" component={PerfilScreen} />
+
   </Tab.Navigator>
 );
 

@@ -5,7 +5,7 @@ import { BarChart } from 'react-native-chart-kit';
 const ConsumptionChart = ({ selectedPeriod }) => {
     // Datos para Consumo
     const consumoHoy = {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        labels: ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom'],
         datasets: [{ data: [10, 5, 12, 8, 6, 10, 4] }],
     };
 
