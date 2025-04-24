@@ -1,64 +1,98 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { BarChart } from 'react-native-chart-kit';
+import { View, StyleSheet, Dimensions, Text } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
+import Toast from 'react-native-toast-message';
 
-const ConsumptionChart = ({ selectedPeriod }) => {
-    // Datos para Consumo
-    const consumoHoy = {
-        labels: ['Lun', 'Mar', 'Mier', 'Jue', 'Vie', 'Sab', 'Dom'],
-        datasets: [{ data: [10, 5, 12, 8, 6, 10, 4] }],
-    };
 
-    const consumoBimestral = {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril'],
-        datasets: [{ data: [50, 70, 60, 80] }],
-    };
+const screenWidth = Dimensions.get('window').width;
 
-    // Datos para Pronóstico
-    const pronosticoHoy = {
-        labels: ['Mañana', 'Pasado', 'En 3 días', 'En 4 días'],
-        datasets: [{ data: [15, 18, 12, 20] }],
-    };
+const simplifyLabels = (labels) => {
+  return labels.map((label, index) => {
+    // solo mostrar cada 3ro
+    return index % 3 === 0 ? label.replace(':00', '') : '';
+  });
+};
 
-    const pronosticoBimestral = {
-        labels: ['Próxima Semana', 'Próximo Mes'],
-        datasets: [{ data: [120, 500] }],
-    };
+const ConsumptionChart = ({ selectedPeriod, data }) => {
+  if (!data) return null;
 
-    // Seleccionar datos según el periodo y el tipo
-    let chartData;
-    if (selectedPeriod === 'Hoy') {
-        chartData = consumoHoy; // Para Consumo Hoy
-    } else if (selectedPeriod === 'Bimestral') {
-        chartData = consumoBimestral; // Para Consumo Bimestral
-    }
+  let chartData = {
+    labels: [],
+    datasets: [{ data: [] }],
+  };
 
-    return (
-        <View style={styles.chartContainer}>
-            <BarChart
-                data={chartData}
-                width={350}
-                height={350}
-                yAxisLabel=""
-                chartConfig={{
-                    backgroundGradientFrom: '#fff',
-                    backgroundGradientTo: '#fff',
-                    color: (opacity = 1) => `rgba(74, 144, 226, ${opacity})`,
-                    barPercentage: 0.5,
-                }}
-                style={styles.chart}
-            />
-        </View>
+  if (selectedPeriod === 'Hoy') {
+    const horas = Object.keys(data.hoy || {}).sort((a, b) =>
+      new Date(`1970/01/01 ${a}`) - new Date(`1970/01/01 ${b}`)
     );
+
+    chartData.labels = simplifyLabels(horas);
+    chartData.datasets[0].data = horas.map((h) => data.hoy[h]);
+  }
+
+  if (selectedPeriod === 'Bimestral') {
+    const meses = Object.keys(data.consumoHistorico || {});
+    chartData.labels = meses;
+    chartData.datasets[0].data = meses.map((m) => data.consumoHistorico[m]);
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Consumo de agua (m³)</Text>
+      <LineChart
+        data={chartData}
+        width={screenWidth - 32}
+        height={260}
+        yAxisSuffix=" m³"
+        fromZero
+        withShadow
+        withDots
+        withInnerLines={false}
+        withVerticalLabels
+        withHorizontalLabels
+        chartConfig={{
+          backgroundGradientFrom: '#fff',
+          backgroundGradientTo: '#fff',
+          decimalPlaces: 0,
+          color: (opacity = 1) => `rgba(74, 144, 226, ${opacity})`,
+          labelColor: () => '#6e6e6e',
+          propsForDots: {
+            r: '4',
+            strokeWidth: '2',
+            stroke: '#4A90E2',
+          },
+        }}
+        bezier
+        style={styles.chart}
+onDataPointClick={({ value, index }) => {
+  const label = chartData.labels[index] || 'Hora desconocida';
+  Toast.show({
+    type: 'info',
+    text1: `Consumo de las ${label}`,
+    text2: `${value} m³`,
+    visibilityTime: 2000,
+    position: 'bottom',
+  });
+}}
+      />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    chartContainer: {
-        alignItems: 'center',
-    },
-    chart: {
-        borderRadius: 10,
-    },
+  container: {
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  title: {
+    fontWeight: '600',
+    fontSize: 16,
+    color: '#444',
+    marginBottom: 10,
+  },
+  chart: {
+    borderRadius: 12,
+  },
 });
 
 export default ConsumptionChart;

@@ -1,20 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import HeaderSection from '../../components/HeaderSection';
 import PeriodSelector from '../../components/PeriodSelector';
 import ConsumptionChart from '../../components/ConsumptionChart';
 import DetailsSection from '../../components/DetailsSection';
 import AlertSection from '../../components/AlertSection';
 import { Picker } from 'react-native-ui-lib';
+import mockData from "@/assets/mockData.json";
+import {mockConsumoData} from "@/assets/mockDataConsumo"
+
 
 const ConsumoScreen = () => {
+  const {
+    tarifas: tarifasDisponibles,
+  } = mockData;
+
+
   const [selectedPeriod, setSelectedPeriod] = useState('Hoy');
-  const [selectedTariff, setSelectedTariff] = useState('Tarifa 1');
+  const [selectedTarifa, setSelectedTarifa] = useState(
+    tarifasDisponibles.length ? tarifasDisponibles[0].code : "DA"
+  );
+  
+
 
   useEffect(() => {
-    console.log(`Tarifa seleccionada: ${selectedTariff}`);
+    console.log(`Tarifa seleccionada: ${selectedTarifa}`);
     
-  }, [selectedTariff]);
+  }, [selectedTarifa]);
   useEffect(() => {
     console.log(`Periodo seleccionada: ${selectedPeriod}`);
     
@@ -26,29 +38,40 @@ const ConsumoScreen = () => {
       <PeriodSelector selectedPeriod={selectedPeriod} onPeriodChange={setSelectedPeriod} />
 
       {/* Gráfico de consumo */}
-      <ConsumptionChart selectedPeriod={selectedPeriod} selectedTariff={selectedTariff} />
+      <ConsumptionChart selectedPeriod={selectedPeriod} selectedTarifa={selectedTarifa} data= {mockConsumoData} />
 
       {/* Selector de tarifa */}
-      <Picker
-        value={selectedTariff}
-        onChange={(item) => {
-          setSelectedTariff(item);
-        }}
-        style={styles.picker}
-      >
-        <Picker.Item label="Tarifa 1" value="Tarifa 1" />
-        <Picker.Item label="Tarifa 2" value="Tarifa 2" />
-        <Picker.Item label="Tarifa 3" value="Tarifa 3" />
-      </Picker>
 
-      {/* Detalles de consumo */}
-      <DetailsSection selectedTariff={selectedTariff} viewType="Consumo" selectedPeriod={selectedPeriod} />
-      <AlertSection/>
+          <Picker
+            placeholder="Selecciona una tarifa"
+            value={selectedTarifa}
+            onChange={setSelectedTarifa}
+            topBarProps={{ title: "Selecciona una tarifa" }}
+            style={styles.picker}
+          >
+            {tarifasDisponibles.map((t, i) => (
+              <Picker.Item key={i} value={t.code} label={t.label} />
+            ))}
+          </Picker>
+
+
+
+      <DetailsSection selectedTarifa={selectedTarifa} viewType="Consumo" selectedPeriod={selectedPeriod} data={mockConsumoData} />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  selectContainer: {
+    width: "45%",
+    backgroundColor: "white",
+    borderRadius: 8,
+    borderWidth: 1.5,
+    borderColor: "#6E6E6E",
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    justifyContent: "center",
+  },
   container: {
     flex: 1,
     padding: 16,

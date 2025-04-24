@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { PaperProvider } from "react-native-paper";
 import { Ionicons } from '@expo/vector-icons'; 
+import Toast from 'react-native-toast-message';
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
@@ -60,6 +61,7 @@ export default function RootLayout() {
         <Stack.Screen name="Auth" component={AuthStack} />
         <Stack.Screen name="Main" component={MainTabs} />
       </Stack.Navigator>
+      <Toast />
     </PaperProvider>
   );
 }

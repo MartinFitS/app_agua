@@ -1,0 +1,17 @@
+{
+    "usuario": "Ariel Rosas",
+    "tarifas": [
+      { "label": "Doméstica A", "code": "DA" },
+      { "label": "Doméstica B", "code": "DB" },
+      { "label": "Comercial", "code": "CA" },
+      { "label": "Industrial", "code": "I" }
+    ],
+    "consumoDelDia": 100,
+    "limiteConsumo": 100,
+    "gastoAcumulado": 900,
+    "limiteGasto": 1000,
+    "progresoTarifa": 90,
+    "limiteTarifa": 100,
+    "horaActualizacion": "10:43 am"
+  }
+  

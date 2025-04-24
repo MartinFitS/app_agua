@@ -33,6 +33,26 @@ const LoginScreen = () => {
     }
   };
 
+  // const handleLogin = async () => {
+  //   try {
+  //     const response = await axios.post("https://TU_DOMINIO/api/login", {
+  //       email,
+  //       password,
+  //     });
+  
+  //     if (response.data.success) {
+  //       setErrorMessage("");
+  //       navigation.navigate("Main");
+  //     } else {
+  //       setErrorMessage("Credenciales incorrectas. Intenta nuevamente.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error al iniciar sesión:", error);
+  //     setErrorMessage("Error del servidor. Intenta más tarde.");
+  //   }
+  // };
+  
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -104,6 +124,18 @@ const LoginScreen = () => {
           >
             Iniciar Sesión
           </Button>
+
+          <View style={styles.registerContainer}>
+            <Text style={styles.registerText}>
+              ¿No tienes cuenta?{" "}
+              <Text
+                style={styles.registerLink}
+                onPress={() => navigation.navigate("Register")} // Cambia "Register" por la ruta correspondiente
+              >
+                Regístrate aquí
+              </Text>
+            </Text>
+          </View>
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>Developed by</Text>
@@ -181,6 +213,18 @@ const styles = StyleSheet.create({
     color: "#999",
     fontSize: 13,
   },
+  registerContainer: {
+    marginTop: 15,
+    alignItems: "center",
+  },
+  registerText: {
+    color: "#555",
+    fontSize: 14,
+  },
+  registerLink: {
+    color: "#1D61E7",
+    fontWeight: "bold",
+  }  
 });
 
 export default LoginScreen;
