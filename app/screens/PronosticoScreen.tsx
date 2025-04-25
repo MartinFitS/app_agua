@@ -1,40 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { TextInput, Button, Checkbox, Text } from "react-native-paper";
-import HeaderSection from '../../components/HeaderSection';
-import PeriodSelector from '../../components/PeriodSelector';
-import ConsumptionChart from '../../components/ConsumptionChart';
-import DetailsSection from '../../components/DetailsSection';
+import PeriodSelectorPronostico from '@/components/PeriodSelectorPronostico';
+import mockData from "@/assets/mockData.json";
+import {mockConsumoData} from "@/assets/mockDataConsumo"
+import PronosticoResumen from '@/components/PronosticoResumen';
+
 import { Picker } from 'react-native-ui-lib';
 
 const PronosticoScreen = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState('Hoy');
-  const [selectedTariff, setSelectedTariff] = useState('Tarifa 1');
+  const {
+    tarifas: tarifasDisponibles,
+  } = mockData;
+  const [selectedPeriod, setSelectedPeriod] = useState('mes');
+  const [selectedTarifa, setSelectedTarifa] = useState(
+    tarifasDisponibles.length ? tarifasDisponibles[0].code : "DA"
+  );
 
   useEffect(() => {
-    console.log(`Tarifa seleccionada: ${selectedTariff}`);
-  }, [selectedTariff]);
+    console.log(`Tarifa seleccionada: ${selectedTarifa}`);
+  }, [selectedTarifa]);
 
   return (
     <ScrollView style={styles.container}>
-      <PeriodSelector selectedPeriod={selectedPeriod} onPeriodChange={setSelectedPeriod} />
-      <ConsumptionChart selectedPeriod={selectedPeriod} selectedTariff={selectedTariff} />
+      <PeriodSelectorPronostico selectedPeriod={selectedPeriod} onPeriodChange={setSelectedPeriod} />
 
-      {/* Selector de tarifa */}
       <Picker
-        value={selectedTariff}
-        onChange={(item) => {
-          setSelectedTariff(item);
-        }}
-        style={styles.picker}
-      >
-        <Picker.Item label="Tarifa 1" value="Tarifa 1" />
-        <Picker.Item label="Tarifa 2" value="Tarifa 2" />
-        <Picker.Item label="Tarifa 3" value="Tarifa 3" />
+            placeholder="Selecciona una tarifa"
+            value={selectedTarifa}
+            onChange={setSelectedTarifa}
+            topBarProps={{ title: "Selecciona una tarifa" }}
+            style={styles.picker}
+          >
+            {tarifasDisponibles.map((t, i) => (
+              <Picker.Item key={i} value={t.code} label={t.label} />
+            ))}
       </Picker>
+      <PronosticoResumen data={mockConsumoData} selectedTarifa={selectedTarifa} periodo={selectedPeriod}/>
 
-      {/* Detalles de consumo o pronóstico */}
-      <DetailsSection selectedTariff={selectedTariff} viewType="Pronostico" selectedPeriod={selectedPeriod} />
+
+
+
     </ScrollView>
   );
 };

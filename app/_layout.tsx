@@ -11,6 +11,8 @@ import ConsumoScreen from "./screens/ConsumoScreen";
 import PronosticoScreen from "./screens/PronosticoScreen";
 import AnalisisScreen from "./screens/AnalisisScreen";
 import PerfilScreen from "./screens/PerfilScreen";
+import 'react-native-reanimated';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
