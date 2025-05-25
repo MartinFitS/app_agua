@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
 import { Picker } from "react-native-ui-lib";
 import CircularProgress from "../../components/PieChart";
@@ -10,8 +10,11 @@ import { tarifas, precios } from "@/assets/tarifas";
 import { calcularRangosConsumo, getColorPorRango } from "@/assets/calculosConsumo";
 import {calcularTotalAPagar} from "@/assets/CalcularTotalAPagar"
 import TarifaSegmentBar from "@/components/TarifaSegmentedBar";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const HomeScreen = () => {
+const { user, token, login, logout } = useContext(AuthContext);
+  console.log("contexto",user)
   const {
     usuario,
     tarifas: tarifasDisponibles,
@@ -38,13 +41,10 @@ const HomeScreen = () => {
 
   const totalAPagar = calcularTotalAPagar(consumoDelDia, selectedTarifaCode, tarifas, precios);
 
-
-
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={require("../../assets/img/logo_udc.png")} style={styles.logo} />
-      <Text style={styles.saludo}>Bienvenida, {usuario} 👋</Text>
+      <Text style={styles.saludo}> Bienvenida, {user?.username ?? "Invitado"} 👋</Text>
 
       <View style={styles.tarifaRow}>
         <View style={styles.selectContainer}>

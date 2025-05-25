@@ -9,6 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 import { TextInput, Button, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { registerUserService } from "../../services/registerUserService";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -34,20 +35,46 @@ const RegisterScreen = () => {
     }
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const emailRegex = /^[\w\.-]+@ucol\.mx$/;
     if (!emailRegex.test(email)) {
       alert("Por favor, usa un correo institucional @ucol.mx.");
       return;
     }
-
+  
     if (password !== confirmPassword) {
       alert("Las contraseñas no coinciden.");
       return;
     }
-
-    console.log({ username, email, password, imageBase64 });
+  
+    try {
+      const formData = new FormData();
+  
+      formData.append("username", username);
+      formData.append("correo_institucional", email);
+      formData.append("password", password);
+  
+      if (imageBase64) {
+        formData.append("img", {
+          uri: imageBase64,
+          name: "profile.jpg",
+          type: "image/jpeg",
+        } as any);
+      }
+  
+      await registerUserService(formData);
+  
+      alert("Registro exitoso. Revisa tu correo para activar tu cuenta.");
+      navigation.navigate("Login");
+    } catch (error) {
+      console.error("Error en el registro:", error.response?.data || error.message);
+      alert(
+        error.response?.data?.message ||
+        "Ocurrió un error al registrarte. Intenta nuevamente."
+      );
+    }
   };
+  
 
   return (
     <View style={styles.container}>

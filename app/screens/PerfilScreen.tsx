@@ -1,29 +1,43 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StyleSheet, ScrollView, Image } from "react-native";
 import { View, Text } from "react-native-ui-lib";
 import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "@/contexts/AuthContext";
+
 
 const PerfilScreen = () => {
+    const { user, token, login, logout } = useContext(AuthContext);
     const navigation = useNavigation();
+
+    if (!user) {
+        return null; // evita el crash al desloguearse
+      }
+
 
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.content}>
                 {/* Card de información */}
                 <View style={styles.card}>
-                    <Image source={require("../../assets/img/logo_udc.png")} style={styles.profileImage} />
-                    <Text style={styles.name}>Martin Serna Díaz</Text>
-                    <Text style={styles.email}>correo@correo.com</Text>
-                    <Text style={styles.phone}>#52 123 456 1234</Text>
+                <Image source={{ uri: user.imageUrl }} style={styles.profileImage} />                   
+                 <Text style={styles.name}>{user.username}</Text>
+                    <Text style={styles.email}>{user.correo_institucional}</Text>
                     <View style={styles.buttonContainer}>
-                <Button
-                    textColor="red"
-                    style={styles.logoutButton}
-                    onPress={() => navigation.navigate("Main")}
-                >
-                    Cerrar Sesión
-                </Button>
+                    <Button
+                          textColor="red"
+                          style={styles.logoutButton}
+                          onPress={async () => {
+                            await logout();
+                            navigation.reset({
+                              index: 0,
+                              routes: [{ name: "Auth" as never }],
+                            });
+                          }}
+                        >
+                          Cerrar Sesión
+                        </Button>
+
             </View>
                 </View>
 
@@ -38,7 +52,7 @@ const PerfilScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#f4f6f8", // fondo más suave
+        backgroundColor: "#f4f6f8", 
     },
     content: {
         flexGrow: 1,
@@ -64,7 +78,7 @@ const styles = StyleSheet.create({
     profileImage: {
         width: 150,
         height: 150,
-        borderRadius: 50,
+        borderRadius: 90,
         marginTop: 40,
         marginBottom: 25,
     },

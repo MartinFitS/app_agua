@@ -6,7 +6,7 @@
       { "label": "Comercial", "code": "CA" },
       { "label": "Industrial", "code": "I" }
     ],
-    "consumoDelDia": 100,
+    "consumoDelDia": 120,
     "limiteConsumo": 100,
     "gastoAcumulado": 900,
     "limiteGasto": 1000,

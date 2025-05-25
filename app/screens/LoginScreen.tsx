@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Image,
@@ -13,45 +13,32 @@ import {
 import { TextInput, Button, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { login } from "../../services/authService";
+import { AuthContext } from "@/contexts/AuthContext"; 
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const [email, setEmail] = useState("");
+  const [correo_institucional, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secureText, setSecureText] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const { login: loginToContext } = useContext(AuthContext);
 
-  const handleLogin = () => {
-    const validEmail = "admin@ucol.mx";
-    const validPassword = "123456";
 
-    if (email === validEmail && password === validPassword) {
+  const handleLogin = async () => {
+    try {
+      const response = await login(correo_institucional, password);
       setErrorMessage("");
+  
+      await loginToContext(response.user, response.access_token);
+  
       navigation.navigate("Main");
-    } else {
-      setErrorMessage("Credenciales incorrectas. Intenta nuevamente.");
+    } catch (error) {
+      console.error("Login error:", error.response?.data || error.message);
+      const msg = error.response?.data?.message || "Error al iniciar sesión.";
+      setErrorMessage(msg);
     }
   };
-
-  // const handleLogin = async () => {
-  //   try {
-  //     const response = await axios.post("https://TU_DOMINIO/api/login", {
-  //       email,
-  //       password,
-  //     });
-  
-  //     if (response.data.success) {
-  //       setErrorMessage("");
-  //       navigation.navigate("Main");
-  //     } else {
-  //       setErrorMessage("Credenciales incorrectas. Intenta nuevamente.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error al iniciar sesión:", error);
-  //     setErrorMessage("Error del servidor. Intenta más tarde.");
-  //   }
-  // };
-  
 
   return (
     <KeyboardAvoidingView
@@ -66,8 +53,8 @@ const LoginScreen = () => {
           />
 
           <TextInput
-            label="Email"
-            value={email}
+            label="correo_institucional"
+            value={correo_institucional}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -107,7 +94,7 @@ const LoginScreen = () => {
                 style={{ marginRight: 6 }}
               />
               <Text style={styles.infoText}>
-                Usa tus credenciales institucionales del sistema SICEUC para iniciar sesión.
+                Usa tus credenciales institucionales del sistema SICEUC para registrarte.
               </Text>
             </View>
           </View>
