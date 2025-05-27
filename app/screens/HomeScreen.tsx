@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
 import { Picker } from "react-native-ui-lib";
 import CircularProgress from "../../components/PieChart";
@@ -11,19 +11,23 @@ import { calcularRangosConsumo, getColorPorRango } from "@/assets/calculosConsum
 import {calcularTotalAPagar} from "@/assets/CalcularTotalAPagar"
 import TarifaSegmentBar from "@/components/TarifaSegmentedBar";
 import { AuthContext } from "@/contexts/AuthContext";
+import io from "socket.io-client";
+import LottieView from 'lottie-react-native';
+import { ActivityIndicator } from 'react-native';
 
 const HomeScreen = () => {
 const { user, token, login, logout } = useContext(AuthContext);
-  console.log("contexto",user)
   const {
-    usuario,
     tarifas: tarifasDisponibles,
-    consumoDelDia,
     limiteGasto,
     progresoTarifa,
     limiteTarifa,
-    horaActualizacion,
   } = mockData;
+
+  const [consumoDelDia, setConsumoDelDia] = useState(0);
+  const [horaActualizacion, setHoraActualizacion] = useState(dayjs().format("HH:mm:ss"));
+
+  const [cargando, setCargando] = useState(true);
 
   const currentDate = dayjs().locale("es").format("D [de] MMMM [del] YYYY");
   const [selectedTarifa, setSelectedTarifa] = useState(
@@ -41,7 +45,49 @@ const { user, token, login, logout } = useContext(AuthContext);
 
   const totalAPagar = calcularTotalAPagar(consumoDelDia, selectedTarifaCode, tarifas, precios);
 
+
+  useEffect(() => {
+    const socket = io("ws://localhost:3000/"); // 👈 cambia esto por tu URL real
+
+    socket.on("connect", () => {
+      console.log("🔌 Conectado al WebSocket");
+    });
+
+    socket.on("datos", (data) => {
+      console.log("📥 Datos recibidos:", data);
+      console.log("🕒 Timestamp recibido:", data.timestamp);
+      const partes = data.timestamp.split(", ");
+      const horaFormateada = partes[1] || "Hora inválida";
+      setConsumoDelDia(data.lectura); // actualiza el estado con la nueva lectura
+      setHoraActualizacion(horaFormateada); // actualiza la hora
+      setCargando(false); 
+    });
+
+    return () => {
+      socket.disconnect();
+      console.log("🔌 Desconectado del WebSocket");
+    };
+  }, []);
+
+
+  if (cargando) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Image source={require("../../assets/img/logo_udc.png")} style={styles.loadingLogo} />
+        <LottieView
+          source={require("../../assets/animations/agua_lottie.json")}
+          autoPlay
+          loop
+          style={{ width: 200, height: 200 }}
+        />
+        <Text style={styles.loadingText}>Cargando consumo en tiempo real...</Text>
+      </View>
+    );
+  }
+  
+
   return (
+    
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={require("../../assets/img/logo_udc.png")} style={styles.logo} />
       <Text style={styles.saludo}> Bienvenida, {user?.username ?? "Invitado"} 👋</Text>
@@ -67,7 +113,7 @@ const { user, token, login, logout } = useContext(AuthContext);
         <View style={[styles.card, { backgroundColor: colorDinamico }]}>  {/* Dinámico */}
           <Text style={styles.cardTitle}>CONSUMO DEL DÍA</Text>
           <CircularProgress
-            value={consumoDelDia}
+            value={consumoDelDia.toFixed(2)} 
             max={limiteConsumo}
             color="white"
             backgroundColor="#E0E0E0"
@@ -90,7 +136,7 @@ const { user, token, login, logout } = useContext(AuthContext);
       </View>
 
       <TarifaSegmentBar
-            consumo={consumoDelDia}
+            consumo={consumoDelDia.toFixed(2)}
             tarifaId={selectedTarifaCode}
             rangos={tarifas[selectedTarifaCode]}
         />
@@ -113,6 +159,8 @@ const { user, token, login, logout } = useContext(AuthContext);
           <AlertSection mensajes={["Buen trabajo, consumo dentro del rango básico."]} />
         </View>
       )}
+
+      
 
     </ScrollView>
   );
@@ -231,6 +279,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#555",
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
+  },
+  loadingLogo: {
+    width: 120,
+    height: 120,
+    marginBottom: 20,
+  },
+  loadingText: {
+    marginTop: 20,
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#444",
+  },
+  
 });
 
 export default HomeScreen;
