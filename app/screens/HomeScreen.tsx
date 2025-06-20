@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
 import { Picker } from "react-native-ui-lib";
 import CircularProgress from "../../components/PieChart";
@@ -8,33 +8,27 @@ import "dayjs/locale/es";
 import mockData from "@/assets/mockData.json";
 import { tarifas, precios } from "@/assets/tarifas";
 import { calcularRangosConsumo, getColorPorRango } from "@/assets/calculosConsumo";
-import {calcularTotalAPagar} from "@/assets/CalcularTotalAPagar"
+import { calcularTotalAPagar } from "@/assets/CalcularTotalAPagar";
 import TarifaSegmentBar from "@/components/TarifaSegmentedBar";
 import { AuthContext } from "@/contexts/AuthContext";
 import io from "socket.io-client";
 import LottieView from 'lottie-react-native';
-import { ActivityIndicator } from 'react-native';
+import { ConsumoContext } from "@/contexts/ConsumoContext";
 
 const HomeScreen = () => {
-const { user, token, login, logout } = useContext(AuthContext);
-  const {
-    tarifas: tarifasDisponibles,
-    limiteGasto,
-    progresoTarifa,
-    limiteTarifa,
-  } = mockData;
+  const { user } = useContext(AuthContext);
+  const { consumoDelDia, horaActualizacion, cargando, setConsumoDelDia, setHoraActualizacion, setCargando } = useContext(ConsumoContext);
 
-  const [consumoDelDia, setConsumoDelDia] = useState(0);
-  const [horaActualizacion, setHoraActualizacion] = useState(dayjs().format("HH:mm:ss"));
-
-  const [cargando, setCargando] = useState(true);
+  const { tarifas: tarifasDisponibles } = mockData;
 
   const currentDate = dayjs().locale("es").format("D [de] MMMM [del] YYYY");
-  const [selectedTarifa, setSelectedTarifa] = useState(
+  const [selectedTarifa, setSelectedTarifa] = React.useState(
     tarifasDisponibles.length ? tarifasDisponibles[0].code : "DA"
   );
-  
+
   const selectedTarifaCode = selectedTarifa || "DA";
+
+  // Calcular rangos y color dinámico
   const rangos = {
     B: 0, IL: 0, IM: 0, IH: 0, H: 0, S: 0,
     ...calcularRangosConsumo(consumoDelDia, selectedTarifaCode, tarifas)
@@ -42,33 +36,7 @@ const { user, token, login, logout } = useContext(AuthContext);
   const colorDinamico = getColorPorRango(consumoDelDia, selectedTarifaCode, tarifas);
 
   const limiteConsumo = tarifas[selectedTarifaCode].slice(0, 5).reduce((a, b) => a + b, 0);
-
   const totalAPagar = calcularTotalAPagar(consumoDelDia, selectedTarifaCode, tarifas, precios);
-
-
-  useEffect(() => {
-    const socket = io("ws://localhost:3000/"); // 👈 cambia esto por tu URL real
-
-    socket.on("connect", () => {
-      console.log("🔌 Conectado al WebSocket");
-    });
-
-    socket.on("datos", (data) => {
-      console.log("📥 Datos recibidos:", data);
-      console.log("🕒 Timestamp recibido:", data.timestamp);
-      const partes = data.timestamp.split(", ");
-      const horaFormateada = partes[1] || "Hora inválida";
-      setConsumoDelDia(data.lectura); // actualiza el estado con la nueva lectura
-      setHoraActualizacion(horaFormateada); // actualiza la hora
-      setCargando(false); 
-    });
-
-    return () => {
-      socket.disconnect();
-      console.log("🔌 Desconectado del WebSocket");
-    };
-  }, []);
-
 
   if (cargando) {
     return (
@@ -84,10 +52,8 @@ const { user, token, login, logout } = useContext(AuthContext);
       </View>
     );
   }
-  
 
   return (
-    
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={require("../../assets/img/logo_udc.png")} style={styles.logo} />
       <Text style={styles.saludo}> Bienvenida, {user?.username ?? "Invitado"} 👋</Text>
@@ -110,10 +76,10 @@ const { user, token, login, logout } = useContext(AuthContext);
       </View>
 
       <View style={styles.topRow}>
-        <View style={[styles.card, { backgroundColor: colorDinamico }]}>  {/* Dinámico */}
+        <View style={[styles.card, { backgroundColor: colorDinamico }]}>
           <Text style={styles.cardTitle}>CONSUMO DEL DÍA</Text>
           <CircularProgress
-            value={consumoDelDia.toFixed(2)} 
+            value={consumoDelDia.toFixed(2)}
             max={limiteConsumo}
             color="white"
             backgroundColor="#E0E0E0"
@@ -123,11 +89,11 @@ const { user, token, login, logout } = useContext(AuthContext);
         </View>
         <View style={[styles.card, { backgroundColor: '#F5F7F8' }]}>
           <Text style={styles.cardTitleGasto}>GASTO ACUMULADO</Text>
-          <View style={[styles.card, { backgroundColor: '#F5F7F8' }]}>
-  <Text style={{ fontWeight: "bold", fontSize: 22, color: "#000" }}>
-    ${totalAPagar}
-  </Text>
-</View>
+          <View>
+            <Text style={{ fontWeight: "bold", fontSize: 22, color: "#000" }}>
+              ${totalAPagar}
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -136,32 +102,22 @@ const { user, token, login, logout } = useContext(AuthContext);
       </View>
 
       <TarifaSegmentBar
-            consumo={consumoDelDia.toFixed(2)}
-            tarifaId={selectedTarifaCode}
-            rangos={tarifas[selectedTarifaCode]}
-        />
+        consumo={consumoDelDia.toFixed(2)}
+        tarifaId={selectedTarifaCode}
+        rangos={tarifas[selectedTarifaCode]}
+      />
 
-      {/* Alertas según el rango más alto alcanzado */}
       {rangos?.S > 0 && (
-        <View>
-          <AlertSection mensajes={["El consumo actual supera los límites permitidos"]} />
-        </View>
+        <AlertSection mensajes={["El consumo actual supera los límites permitidos"]} tipo="ALTO" />
       )}
 
       {rangos?.H > 0 && rangos?.S === 0 && (
-        <View>
-          <AlertSection mensajes={["Estás en la zona alta de consumo. Considera reducirlo."]} />
-        </View>
+        <AlertSection mensajes={["Estás en la zona alta de consumo. Considera reducirlo."]} tipo="MEDIO" />
       )}
 
       {rangos?.B > 0 && rangos?.IL === 0 && (
-        <View>
-          <AlertSection mensajes={["Buen trabajo, consumo dentro del rango básico."]} />
-        </View>
+        <AlertSection mensajes={["Buen trabajo, consumo dentro del rango básico."]} tipo="BAJO" />
       )}
-
-      
-
     </ScrollView>
   );
 };
@@ -246,39 +202,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#6E6E6E",
   },
-  tarifaContainer: {
-    backgroundColor: "#DDE5F1",
-    padding: 15,
-    borderRadius: 15,
-  },
-  tarifaHeader: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  progressBarContainer: {
-    backgroundColor: "#B0C4DE",
-    borderRadius: 10,
-    height: 12,
-    width: "100%",
-    marginVertical: 10,
-  },
-  progressBar: {
-    backgroundColor: "#4A90E2",
-    height: "100%",
-    borderRadius: 10,
-  },
-  progressLabels: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  progressValue: {
-    fontSize: 12,
-    fontWeight: "bold",
-  },
-  progressLimit: {
-    fontSize: 12,
-    color: "#555",
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
@@ -296,7 +219,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#444",
   },
-  
 });
 
 export default HomeScreen;

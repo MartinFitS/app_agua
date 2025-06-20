@@ -37,9 +37,6 @@ const PronosticoScreen = () => {
       </Picker>
       <PronosticoResumen data={mockConsumoData} selectedTarifa={selectedTarifa} periodo={selectedPeriod}/>
 
-
-
-
     </ScrollView>
   );
 };

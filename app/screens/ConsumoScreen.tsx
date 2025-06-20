@@ -1,62 +1,119 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import HeaderSection from '../../components/HeaderSection';
 import PeriodSelector from '../../components/PeriodSelector';
 import ConsumptionChart from '../../components/ConsumptionChart';
 import DetailsSection from '../../components/DetailsSection';
-import AlertSection from '../../components/AlertSection';
 import { Picker } from 'react-native-ui-lib';
 import mockData from "@/assets/mockData.json";
-import {mockConsumoData} from "@/assets/mockDataConsumo"
-
+import { mockConsumoData } from "@/assets/mockDataConsumo";
 
 const ConsumoScreen = () => {
   const {
     tarifas: tarifasDisponibles,
   } = mockData;
 
-
   const [selectedPeriod, setSelectedPeriod] = useState('Hoy');
   const [selectedTarifa, setSelectedTarifa] = useState(
     tarifasDisponibles.length ? tarifasDisponibles[0].code : "DA"
   );
-  
 
+
+  const [datosHoy, setDatosHoy] = useState(null);
+  const [datosMes, setDatosMes] = useState(null);
+
+  const fetchConsumoHoy = async () => {
+    try {
+      const fechaHoy = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+      const response = await fetch('https://api-tesis-7k22.onrender.com/consumo/hoy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fecha: fechaHoy }),
+      });
+      const data = await response.json();
+      setDatosHoy(data);
+      console.log('Datos consumo hoy:', data);
+    } catch (error) {
+      console.error('Error al obtener consumo hoy:', error);
+    }
+  };
+
+  const fetchConsumoMes = async () => {
+    try {
+      const hoy = new Date();
+      const mes = hoy.getMonth() + 1;
+      const anio = hoy.getFullYear();
+
+      const response = await fetch('https://api-tesis-7k22.onrender.com/consumo/mes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mes, anio }),
+      });
+      const data = await response.json();
+      setDatosMes(data);
+      console.log('Datos consumo mes:', data);
+    } catch (error) {
+      console.error('Error al obtener consumo mes:', error);
+    }
+  };
+
+
+
+  useEffect(() => {
+    fetchConsumoHoy();
+    fetchConsumoMes();
+    const intervalId = setInterval(() => {
+      fetchConsumoHoy();
+      fetchConsumoMes();
+    }, 600000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     console.log(`Tarifa seleccionada: ${selectedTarifa}`);
-    
   }, [selectedTarifa]);
+
   useEffect(() => {
-    console.log(`Periodo seleccionada: ${selectedPeriod}`);
-    
+    console.log(`Periodo seleccionado: ${selectedPeriod}`);
   }, [selectedPeriod]);
+
+
 
   return (
     <ScrollView style={styles.container}>
-      <HeaderSection />
+      <HeaderSection
+        tipoFactura={selectedPeriod}
+        datosFactura={selectedPeriod === 'Hoy' ? datosHoy : datosMes?.datos}
+      />
+
       <PeriodSelector selectedPeriod={selectedPeriod} onPeriodChange={setSelectedPeriod} />
 
-      {/* Gráfico de consumo */}
-      <ConsumptionChart selectedPeriod={selectedPeriod} selectedTarifa={selectedTarifa} data= {mockConsumoData} />
+      {/* Por ahora no renderizamos datos reales */}
+      <ConsumptionChart
+        selectedPeriod={selectedPeriod}
+        selectedTarifa={selectedTarifa}
+        data={selectedPeriod === 'Hoy' ? datosHoy : datosMes?.datos}
+      />
 
-      {/* Selector de tarifa */}
+      <Picker
+        placeholder="Selecciona una tarifa"
+        value={selectedTarifa}
+        onChange={setSelectedTarifa}
+        topBarProps={{ title: "Selecciona una tarifa" }}
+        style={styles.picker}
+      >
+        {tarifasDisponibles.map((t, i) => (
+          <Picker.Item key={i} value={t.code} label={t.label} />
+        ))}
+      </Picker>
 
-          <Picker
-            placeholder="Selecciona una tarifa"
-            value={selectedTarifa}
-            onChange={setSelectedTarifa}
-            topBarProps={{ title: "Selecciona una tarifa" }}
-            style={styles.picker}
-          >
-            {tarifasDisponibles.map((t, i) => (
-              <Picker.Item key={i} value={t.code} label={t.label} />
-            ))}
-          </Picker>
-
-
-
-      <DetailsSection selectedTarifa={selectedTarifa} viewType="Consumo" selectedPeriod={selectedPeriod} data={mockConsumoData} />
+      <DetailsSection
+        selectedTarifa={selectedTarifa}
+        viewType="Consumo"
+        selectedPeriod={selectedPeriod}
+        data={datosMes}
+      />
     </ScrollView>
   );
 };

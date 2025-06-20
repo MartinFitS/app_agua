@@ -9,9 +9,9 @@ import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ConsumoScreen from "./screens/ConsumoScreen";
 import PronosticoScreen from "./screens/PronosticoScreen";
-import AnalisisScreen from "./screens/AnalisisScreen";
 import PerfilScreen from "./screens/PerfilScreen";
-import { AuthProvider } from "../contexts/AuthContext"; // 👈 asegúrate de que esta ruta es correcta
+import { AuthProvider } from "../contexts/AuthContext";
+import { ConsumoProvider } from "../contexts/ConsumoContext"; 
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -32,7 +32,6 @@ const MainTabs = () => (
         if (route.name === "Home") iconName = "home";
         else if (route.name === "Consumo") iconName = "bar-chart";
         else if (route.name === "Pronostico") iconName = "cloud";
-        else if (route.name === "Analisis") iconName = "analytics";
         else if (route.name === "Perfil") iconName = "person";
         return <Ionicons name={iconName as any} size={size} color={color} />;
       },
@@ -41,14 +40,14 @@ const MainTabs = () => (
     <Tab.Screen name="Home" component={HomeScreen} />
     <Tab.Screen name="Consumo" component={ConsumoScreen} />
     <Tab.Screen name="Pronostico" component={PronosticoScreen} />
-    <Tab.Screen name="Analisis" component={AnalisisScreen} />
     <Tab.Screen name="Perfil" component={PerfilScreen} />
   </Tab.Navigator>
 );
 
 export default function RootLayout() {
   return (
-    <AuthProvider> {/* ✅ Envolviendo toda la app */}
+    <AuthProvider>
+      <ConsumoProvider>
       <PaperProvider>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Auth" component={AuthStack} />
@@ -56,6 +55,7 @@ export default function RootLayout() {
         </Stack.Navigator>
         <Toast />
       </PaperProvider>
+      </ConsumoProvider>
     </AuthProvider>
   );
 }

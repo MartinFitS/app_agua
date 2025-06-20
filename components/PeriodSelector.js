@@ -16,7 +16,7 @@ import React from 'react';
        style={[styles.button, selectedPeriod === 'Bimestral' ? styles.activeButton : styles.inactiveButton]}
        onPress={() => onPeriodChange('Bimestral')}
      >
-       <Text style={selectedPeriod === 'Bimestral' ? styles.activeText : styles.inactiveText}>Bimestral</Text>
+       <Text style={selectedPeriod === 'Bimestral' ? styles.activeText : styles.inactiveText}>Mensual</Text>
      </TouchableOpacity>
    </View>
  );

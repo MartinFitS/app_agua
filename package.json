@@ -56,7 +56,9 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "socket.io-client": "^4.8.1",
-    "victory-native": "^40.2.1"
+    "victory-native": "^40.2.1",
+    "expo-sharing": "~13.0.1",
+    "expo-file-system": "~18.0.12"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
