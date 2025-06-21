@@ -1,125 +1,217 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { Text, TextInput, Button } from "react-native-paper";
+import React, { useContext, useState } from "react";
+import {
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import { TextInput, Button, Text } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { login } from "../../services/authService";
+import { AuthContext } from "@/contexts/AuthContext"; 
 
-const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
+const LoginScreen = () => {
+  const navigation = useNavigation();
+  const [correo_institucional, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secureText, setSecureText] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { login: loginToContext } = useContext(AuthContext);
+
+
+  const handleLogin = async () => {
+    try {
+      const response = await login(correo_institucional, password);
+      setErrorMessage("");
+  
+      await loginToContext(response.user, response.access_token);
+  
+      navigation.navigate("Main");
+    } catch (error) {
+      console.error("Login error:", error.response?.data || error.message);
+      const msg = error.response?.data?.message || "Error al iniciar sesión.";
+      setErrorMessage(msg);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      {/* Botón de regreso */}
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.backText}>Login</Text>
-      </TouchableOpacity>
-      
-      {/* Logo */}
-      <Image 
-        source={{ uri: "https://cuerpoacademico67ucol.com.mx/wp-content/uploads/2023/07/udec_2l-izq_negro-3.png" }} 
-        style={styles.logo} 
-      />
-      
-      {/* Texto de bienvenida */}
-      <Text style={styles.welcomeText}>Welcome Back</Text>
-      <Text style={styles.subText}>Sign In to your account</Text>
-      
-      {/* Campo de Email */}
-      <TextInput
-        label="Email Address"
-        mode="outlined"
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      
-      {/* Campo de Contraseña */}
-      <TextInput
-        label="Password"
-        mode="outlined"
-        style={styles.input}
-        secureTextEntry={secureText}
-        value={password}
-        onChangeText={setPassword}
-        right={<TextInput.Icon icon={secureText ? "eye-off" : "eye"} onPress={() => setSecureText(!secureText)} />}
-      />
-      
-      {/* Forgot Password */}
-      <TouchableOpacity onPress={() => console.log("Forgot Password Pressed")}>
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-      </TouchableOpacity>
-      
-      {/* Botón de Login */}
-      <Button mode="contained" style={styles.loginButton} onPress={() => console.log("Login")}>Login</Button>
-      
-      {/* Link de Registro */}
-      <Text style={styles.registerText}>
-        Don't have an account? <Text style={styles.registerLink} onPress={() => navigation.navigate("Register")}>Sign Up</Text>
-      </Text>
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <Image
+            source={require("../../assets/img/logo_udc.png")}
+            style={styles.logo}
+          />
+
+          <TextInput
+            label="correo_institucional"
+            value={correo_institucional}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            style={styles.input}
+            theme={{ colors: { primary: "#1D61E7", outline: "#adaba3" } }}
+            mode="outlined"
+          />
+
+          <View style={styles.passwordContainer}>
+            <TextInput
+              label="Contraseña"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={secureText}
+              style={[styles.input, { flex: 1 }]}
+              theme={{ colors: { primary: "#1D61E7", outline: "#adaba3" } }}
+              mode="outlined"
+            />
+            <TouchableOpacity
+              onPress={() => setSecureText(!secureText)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={secureText ? "eye-off" : "eye"}
+                size={24}
+                color="gray"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.infoBox}>
+            <View style={styles.infoRow}>
+              <Ionicons
+                name="information-circle-outline"
+                size={20}
+                color="#1D61E7"
+                style={{ marginRight: 6 }}
+              />
+              <Text style={styles.infoText}>
+                Usa tus credenciales institucionales del sistema SICEUC para registrarte.
+              </Text>
+            </View>
+          </View>
+
+          {errorMessage !== "" && (
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          )}
+
+          <Button
+            mode="contained"
+            style={styles.button}
+            textColor="white"
+            onPress={handleLogin}
+          >
+            Iniciar Sesión
+          </Button>
+
+          <View style={styles.registerContainer}>
+            <Text style={styles.registerText}>
+              ¿No tienes cuenta?{" "}
+              <Text
+                style={styles.registerLink}
+                onPress={() => navigation.navigate("Register")} // Cambia "Register" por la ruta correspondiente
+              >
+                Regístrate aquí
+              </Text>
+            </Text>
+          </View>
+
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Developed by</Text>
+            <Text style={styles.footerText}>@MartinFits & @arielrosasc</Text>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
-// Estilos
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: "flex-start",
+    flexGrow: 1,
+    alignItems: "center",
+    padding: 30,
     backgroundColor: "white",
-  },
-  backText: {
-    textAlign: "left",
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#B0B0B0",
-    marginBottom: 0,
+    justifyContent: "center",
   },
   logo: {
     width: 120,
-    height: 50,
-    alignSelf: "center",
-    marginBottom: 20,
-    resizeMode: "contain",
-  },
-  welcomeText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 5,
-  },
-  subText: {
-    fontSize: 14,
-    color: "gray",
-    textAlign: "center",
-    marginBottom: 20,
+    height: 120,
+    marginBottom: 50,
   },
   input: {
-    marginBottom: 10,
-  },
-  forgotPassword: {
-    textAlign: "right",
-    color: "#D2691E",
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  loginButton: {
-    backgroundColor: "#283593",
-    paddingVertical: 5,
+    width: "100%",
+    marginBottom: 15,
+    backgroundColor: "white",
     borderRadius: 10,
   },
-  registerText: {
-    textAlign: "center",
-    marginTop: 20,
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: 15,
+  },
+  infoBox: {
+    width: "100%",
+    marginBottom: 12,
+    backgroundColor: "#E8F0FE",
+    padding: 10,
+    borderRadius: 8,
+  },
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  infoText: {
+    color: "#1D61E7",
+    fontSize: 15,
+    fontWeight: "600",
+    flex: 1,
+  },
+  errorText: {
+    color: "red",
     fontSize: 14,
-    color: "gray",
+    marginBottom: 10,
+    alignSelf: "flex-start",
+  },
+  button: {
+    width: "100%",
+    paddingVertical: 8,
+    backgroundColor: "#1D61E7",
+    borderRadius: 10,
+    marginTop: 5,
+  },
+  footer: {
+    marginTop: 40,
+    alignItems: "center",
+  },
+  footerText: {
+    color: "#999",
+    fontSize: 13,
+  },
+  registerContainer: {
+    marginTop: 15,
+    alignItems: "center",
+  },
+  registerText: {
+    color: "#555",
+    fontSize: 14,
   },
   registerLink: {
-    color: "#D2691E",
+    color: "#1D61E7",
     fontWeight: "bold",
-  },
+  }  
 });
 
 export default LoginScreen;
