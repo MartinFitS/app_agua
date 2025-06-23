@@ -41,19 +41,19 @@ const RegisterScreen = () => {
       alert("Por favor, usa un correo institucional @ucol.mx.");
       return;
     }
-  
+
     if (password !== confirmPassword) {
       alert("Las contraseñas no coinciden.");
       return;
     }
-  
+
     try {
       const formData = new FormData();
-  
+
       formData.append("username", username);
       formData.append("correo_institucional", email);
       formData.append("password", password);
-  
+
       if (imageBase64) {
         formData.append("img", {
           uri: imageBase64,
@@ -61,12 +61,12 @@ const RegisterScreen = () => {
           type: "image/jpeg",
         } as any);
       }
-  
+
       await registerUserService(formData);
-  
+
       alert("Registro exitoso. Revisa tu correo para activar tu cuenta.");
       navigation.navigate("Login");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error en el registro:", error.response?.data || error.message);
       alert(
         error.response?.data?.message ||
@@ -74,7 +74,7 @@ const RegisterScreen = () => {
       );
     }
   };
-  
+
 
   return (
     <View style={styles.container}>
@@ -98,6 +98,8 @@ const RegisterScreen = () => {
         onChangeText={setUsername}
         style={styles.input}
         mode="outlined"
+        textColor="#000"
+
       />
 
       <TextInput
@@ -108,6 +110,8 @@ const RegisterScreen = () => {
         autoCapitalize="none"
         style={styles.input}
         mode="outlined"
+        textColor="#000"
+
       />
 
       <View style={styles.passwordContainer}>
@@ -118,6 +122,8 @@ const RegisterScreen = () => {
           secureTextEntry={secureText}
           style={[styles.input, { flex: 1 }]}
           mode="outlined"
+          textColor="#000"
+
         />
         <TouchableOpacity
           style={styles.eyeIcon}
@@ -139,6 +145,8 @@ const RegisterScreen = () => {
           secureTextEntry={secureConfirm}
           style={[styles.input, { flex: 1 }]}
           mode="outlined"
+          textColor="#000"
+
         />
         <TouchableOpacity
           style={styles.eyeIcon}

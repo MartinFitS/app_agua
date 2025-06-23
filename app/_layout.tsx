@@ -11,7 +11,8 @@ import ConsumoScreen from "./screens/ConsumoScreen";
 import PronosticoScreen from "./screens/PronosticoScreen";
 import PerfilScreen from "./screens/PerfilScreen";
 import { AuthProvider } from "../contexts/AuthContext";
-import { ConsumoProvider } from "../contexts/ConsumoContext"; 
+import { ConsumoProvider } from "../contexts/ConsumoContext";
+import { StatusBar } from "react-native";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,16 +47,22 @@ const MainTabs = () => (
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <ConsumoProvider>
-      <PaperProvider>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Auth" component={AuthStack} />
-          <Stack.Screen name="Main" component={MainTabs} />
-        </Stack.Navigator>
-        <Toast />
-      </PaperProvider>
-      </ConsumoProvider>
-    </AuthProvider>
+    <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="white"
+      />
+      <AuthProvider>
+        <ConsumoProvider>
+          <PaperProvider>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="Auth" component={AuthStack} />
+              <Stack.Screen name="Main" component={MainTabs} />
+            </Stack.Navigator>
+            <Toast />
+          </PaperProvider>
+        </ConsumoProvider>
+      </AuthProvider>
+    </>
   );
 }

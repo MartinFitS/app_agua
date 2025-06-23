@@ -14,7 +14,7 @@ import { TextInput, Button, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { login } from "../../services/authService";
-import { AuthContext } from "@/contexts/AuthContext"; 
+import { AuthContext } from "@/contexts/AuthContext";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -29,11 +29,11 @@ const LoginScreen = () => {
     try {
       const response = await login(correo_institucional, password);
       setErrorMessage("");
-  
+
       await loginToContext(response.user, response.access_token);
-  
+
       navigation.navigate("Main");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error.response?.data || error.message);
       const msg = error.response?.data?.message || "Error al iniciar sesión.";
       setErrorMessage(msg);
@@ -53,15 +53,16 @@ const LoginScreen = () => {
           />
 
           <TextInput
-            label="correo_institucional"
+            label="Correo Institucional"
             value={correo_institucional}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
             style={styles.input}
-            theme={{ colors: { primary: "#1D61E7", outline: "#adaba3" } }}
             mode="outlined"
+            textColor="#000"
           />
+
 
           <View style={styles.passwordContainer}>
             <TextInput
@@ -72,6 +73,7 @@ const LoginScreen = () => {
               style={[styles.input, { flex: 1 }]}
               theme={{ colors: { primary: "#1D61E7", outline: "#adaba3" } }}
               mode="outlined"
+              textColor="#000"
             />
             <TouchableOpacity
               onPress={() => setSecureText(!secureText)}
@@ -117,7 +119,7 @@ const LoginScreen = () => {
               ¿No tienes cuenta?{" "}
               <Text
                 style={styles.registerLink}
-                onPress={() => navigation.navigate("Register")} // Cambia "Register" por la ruta correspondiente
+                onPress={() => navigation.navigate("Register")}
               >
                 Regístrate aquí
               </Text>
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
   registerLink: {
     color: "#1D61E7",
     fontWeight: "bold",
-  }  
+  }
 });
 
 export default LoginScreen;

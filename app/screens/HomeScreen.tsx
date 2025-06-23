@@ -11,7 +11,6 @@ import { calcularRangosConsumo, getColorPorRango } from "@/assets/calculosConsum
 import { calcularTotalAPagar } from "@/assets/CalcularTotalAPagar";
 import TarifaSegmentBar from "@/components/TarifaSegmentedBar";
 import { AuthContext } from "@/contexts/AuthContext";
-import io from "socket.io-client";
 import LottieView from 'lottie-react-native';
 import { ConsumoContext } from "@/contexts/ConsumoContext";
 

@@ -7,13 +7,15 @@ import { calcularTotalAPagar } from '@/assets/CalcularTotalAPagar';
 const safeFixed = (value, decimals = 2) =>
   typeof value === 'number' ? value.toFixed(decimals) : 'N/D';
 
-const PronosticoResumen = ({ selectedTarifa, periodo }) => {
+const PronosticoResumen = ({ selectedTarifa, periodo, onLoadingChange }) => {
   const [data, setData] = useState(null);
   const isAnual = periodo === 'anual';
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        onLoadingChange?.(true); // Notifica que empieza a cargar
+
         const endpoint = isAnual
           ? 'https://api-tesis-7k22.onrender.com/consumo/pronostico-anual'
           : 'https://api-tesis-7k22.onrender.com/consumo/pronostico-mes-actual';
@@ -21,6 +23,8 @@ const PronosticoResumen = ({ selectedTarifa, periodo }) => {
         setData(response.data);
       } catch (error) {
         console.error('Error al cargar datos de pronóstico:', error);
+      } finally {
+        onLoadingChange?.(false); // Notifica que terminó de cargar
       }
     };
 
@@ -83,7 +87,6 @@ const PronosticoResumen = ({ selectedTarifa, periodo }) => {
                   {safeFixed(data.consumoActual)} m³
                 </Text>
               </View>
-
               <View style={[styles.resumenItem, styles.resaltado]}>
                 <Text style={styles.resumenLabel}>Promedio mensual:</Text>
                 <Text style={styles.resumenValue}>
@@ -129,7 +132,6 @@ const PronosticoResumen = ({ selectedTarifa, periodo }) => {
                   {safeFixed(data.consumoActual)} m³
                 </Text>
               </View>
-
               <View style={[styles.resumenItem, styles.resaltado]}>
                 <Text style={styles.resumenLabel}>Promedio diario:</Text>
                 <Text style={styles.resumenValue}>

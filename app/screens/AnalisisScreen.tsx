@@ -14,11 +14,10 @@ const AnalisisScreen = () => {
     ];
 
     const [selectedDevice, setSelectedDevice] = useState(devices[0]);
-    const [selectedPeriod, setSelectedPeriod] = useState('Hoy');  
+    const [selectedPeriod, setSelectedPeriod] = useState('Hoy');
 
-    const handlePeriodChange = (period) => {
+    const handlePeriodChange = (period: any) => {
         setSelectedPeriod(period);
-        // Aquí puedes agregar lógica adicional si es necesario para actualizar los datos según el periodo
     };
 
     console.log(selectedDevice)
@@ -26,16 +25,15 @@ const AnalisisScreen = () => {
     return (
         <ScrollView style={styles.container}>
             <View>
-                {/* Pasar las propiedades de periodo y cambio de periodo */}
                 <PeriodSelector selectedPeriod={selectedPeriod} onPeriodChange={handlePeriodChange} />
                 <DeviceGraph value={selectedDevice.value} name={selectedDevice.name} max={selectedDevice.max} />
-             
 
-<DeviceSelector
-  devices={devices}
-  selectedDevice={selectedDevice}
-  onSelect={setSelectedDevice}
-/>
+
+                <DeviceSelector
+                    devices={devices}
+                    selectedDevice={selectedDevice}
+                    onSelect={setSelectedDevice}
+                />
                 <AlertSection />
             </View>
         </ScrollView>
@@ -43,12 +41,12 @@ const AnalisisScreen = () => {
 };
 
 const styles = {
-container: {
-    paddingTop: 55,
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-}
+    container: {
+        paddingTop: 55,
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#fff',
+    }
 }
 
 export default AnalisisScreen;

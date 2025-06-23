@@ -10,7 +10,6 @@ export const calcularTotalAPagar = (consumo, tarifaCode, rangos, precios) => {
       const precio = preciosPorBloque[i];
     
       if (i === bloques.length - 1) {
-        // Excedente: cobra todo lo que queda sin límite
         total += restante * precio;
         break;
       }

@@ -7,44 +7,43 @@ import { AuthContext } from "@/contexts/AuthContext";
 
 
 const PerfilScreen = () => {
-    const { user, token, login, logout } = useContext(AuthContext);
+    const { user, logout } = useContext(AuthContext);
     const navigation = useNavigation();
 
     if (!user) {
-        return null; // evita el crash al desloguearse
-      }
+        return null;
+    }
 
 
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.content}>
-                {/* Card de información */}
                 <View style={styles.card}>
-                <Image source={{ uri: user.imageUrl }} style={styles.profileImage} />                   
-                 <Text style={styles.name}>{user.username}</Text>
+                    <Image source={{ uri: user.imageUrl }} style={styles.profileImage} />
+                    <Text style={styles.name}>{user.username}</Text>
                     <Text style={styles.email}>{user.correo_institucional}</Text>
                     <View style={styles.buttonContainer}>
-                    <Button
-                          textColor="red"
-                          style={styles.logoutButton}
-                          onPress={async () => {
-                            await logout();
-                            navigation.reset({
-                              index: 0,
-                              routes: [{ name: "Auth" as never }],
-                            });
-                          }}
+                        <Button
+                            textColor="red"
+                            style={styles.logoutButton}
+                            onPress={async () => {
+                                await logout();
+                                navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: "Auth" as never }],
+                                });
+                            }}
                         >
-                          Cerrar Sesión
+                            Cerrar Sesión
                         </Button>
 
-            </View>
+                    </View>
                 </View>
 
-                
+
             </ScrollView>
 
-            
+
         </View>
     );
 };
@@ -52,7 +51,7 @@ const PerfilScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#f4f6f8", 
+        backgroundColor: "#f4f6f8",
     },
     content: {
         flexGrow: 1,
@@ -73,7 +72,7 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 5,
         width: "90%",
-        minHeight: "85%", // << agrega esta línea
+        minHeight: "85%",
     },
     profileImage: {
         width: 150,
