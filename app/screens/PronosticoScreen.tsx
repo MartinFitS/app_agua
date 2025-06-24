@@ -19,7 +19,7 @@ const PronosticoScreen = () => {
     tarifasDisponibles.length ? tarifasDisponibles[0].code : "DA"
   );
 
-  const [loading, setLoading] = useState(true); // controlado por el hijo
+  const [loading, setLoading] = useState(true);
 
   return (
     <View style={styles.wrapper}>
@@ -36,7 +36,7 @@ const PronosticoScreen = () => {
         <Picker
           placeholder="Selecciona una tarifa"
           value={selectedTarifa}
-          onChange={setSelectedTarifa}
+          onChange={setSelectedTarifa as any}
           topBarProps={{ title: "Selecciona una tarifa" }}
           style={styles.picker}
         >
@@ -48,7 +48,7 @@ const PronosticoScreen = () => {
         <PronosticoResumen
           selectedTarifa={selectedTarifa}
           periodo={selectedPeriod}
-          onLoadingChange={setLoading} // nueva prop
+          onLoadingChange={setLoading} 
         />
       </ScrollView>
     </View>

@@ -5,7 +5,6 @@ import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "@/contexts/AuthContext";
 
-
 const PerfilScreen = () => {
     const { user, logout } = useContext(AuthContext);
     const navigation = useNavigation();
@@ -13,7 +12,6 @@ const PerfilScreen = () => {
     if (!user) {
         return null;
     }
-
 
     return (
         <View style={styles.container}>
@@ -40,9 +38,7 @@ const PerfilScreen = () => {
                     </View>
                 </View>
 
-
             </ScrollView>
-
 
         </View>
     );

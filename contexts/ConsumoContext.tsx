@@ -4,6 +4,7 @@ import io from "socket.io-client";
 type ConsumoContextType = {
   consumoDelDia: number;
   horaActualizacion: string;
+  
 };
 
 export const ConsumoContext = createContext<ConsumoContextType>({

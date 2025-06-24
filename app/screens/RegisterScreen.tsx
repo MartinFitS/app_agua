@@ -12,7 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { registerUserService } from "../../services/registerUserService";
 
 const RegisterScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation() as any;
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +31,7 @@ const RegisterScreen = () => {
 
     if (!result.canceled) {
       const base64Img = result.assets[0].base64;
-      setImageBase64(`data:image/jpeg;base64,${base64Img}`);
+      setImageBase64(`data:image/jpeg;base64,${base64Img}` as any);
     }
   };
 

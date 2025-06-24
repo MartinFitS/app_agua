@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,20 +10,20 @@ import HeaderSection from '../../components/HeaderSection';
 import PeriodSelector from '../../components/PeriodSelector';
 import ConsumptionChart from '../../components/ConsumptionChart';
 import DetailsSection from '../../components/DetailsSection';
-import { Picker } from 'react-native-ui-lib';
+import { Picker, PickerValue } from 'react-native-ui-lib';
 import mockData from "@/assets/mockData.json";
 import { useFocusEffect } from '@react-navigation/native';
 
 const ConsumoScreen = () => {
   const { tarifas: tarifasDisponibles } = mockData;
 
-  const [selectedPeriod, setSelectedPeriod] = useState('Hoy');
+  const [selectedPeriod, setSelectedPeriod] = useState<'Hoy' | 'Bimestral'>('Hoy');
   const [selectedTarifa, setSelectedTarifa] = useState(
     tarifasDisponibles.length ? tarifasDisponibles[0].code : "DA"
   );
 
-  const [datosHoy, setDatosHoy] = useState(null);
-  const [datosMes, setDatosMes] = useState(null);
+  const [datosHoy, setDatosHoy] = useState<any>(null); 
+  const [datosMes, setDatosMes] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchConsumos = async () => {
@@ -66,9 +66,9 @@ const ConsumoScreen = () => {
     React.useCallback(() => {
       fetchConsumos(); // Al entrar
 
-      const intervalId = setInterval(fetchConsumos, 180000); // Cada 3 minutos
+      const intervalId = setInterval(fetchConsumos, 180000); 
 
-      return () => clearInterval(intervalId); // Limpia al salir
+      return () => clearInterval(intervalId); 
     }, [])
   );
 
@@ -83,7 +83,6 @@ const ConsumoScreen = () => {
         <ScrollView style={styles.container}>
           <HeaderSection
             tipoFactura={selectedPeriod}
-            datosFactura={selectedPeriod === 'Hoy' ? datosHoy : datosMes?.datos}
           />
 
           <PeriodSelector
@@ -93,14 +92,13 @@ const ConsumoScreen = () => {
 
           <ConsumptionChart
             selectedPeriod={selectedPeriod}
-            selectedTarifa={selectedTarifa}
             data={selectedPeriod === 'Hoy' ? datosHoy : datosMes?.datos}
           />
 
           <Picker
             placeholder="Selecciona una tarifa"
             value={selectedTarifa}
-            onChange={setSelectedTarifa}
+            onChange={setSelectedTarifa as (value: PickerValue) => void}
             topBarProps={{ title: "Selecciona una tarifa" }}
             style={styles.picker}
           >
@@ -111,7 +109,6 @@ const ConsumoScreen = () => {
 
           <DetailsSection
             selectedTarifa={selectedTarifa}
-            viewType="Consumo"
             selectedPeriod={selectedPeriod}
             data={datosMes}
           />

@@ -1,6 +1,6 @@
 import AlertSection from "@/components/AlertSection";
 import React, { useState } from "react";
-import { ScrollView, View, Text } from "react-native";
+import { ScrollView, View } from "react-native";
 import DeviceGraph from "../../components/DeviceConsumption";
 import DeviceSelector from "../../components/DeviceSelector";
 import PeriodSelector from "../../components/PeriodSelector";
@@ -27,8 +27,6 @@ const AnalisisScreen = () => {
             <View>
                 <PeriodSelector selectedPeriod={selectedPeriod} onPeriodChange={handlePeriodChange} />
                 <DeviceGraph value={selectedDevice.value} name={selectedDevice.name} max={selectedDevice.max} />
-
-
                 <DeviceSelector
                     devices={devices}
                     selectedDevice={selectedDevice}

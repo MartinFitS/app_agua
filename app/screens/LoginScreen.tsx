@@ -17,13 +17,12 @@ import { login } from "../../services/authService";
 import { AuthContext } from "@/contexts/AuthContext";
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation() as any;
   const [correo_institucional, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secureText, setSecureText] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const { login: loginToContext } = useContext(AuthContext);
-
 
   const handleLogin = async () => {
     try {
@@ -62,7 +61,6 @@ const LoginScreen = () => {
             mode="outlined"
             textColor="#000"
           />
-
 
           <View style={styles.passwordContainer}>
             <TextInput

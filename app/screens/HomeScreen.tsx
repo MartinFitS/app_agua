@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from "react-native";
 import { Picker } from "react-native-ui-lib";
 import CircularProgress from "../../components/PieChart";
@@ -11,46 +11,29 @@ import { calcularRangosConsumo, getColorPorRango } from "@/assets/calculosConsum
 import { calcularTotalAPagar } from "@/assets/CalcularTotalAPagar";
 import TarifaSegmentBar from "@/components/TarifaSegmentedBar";
 import { AuthContext } from "@/contexts/AuthContext";
-import LottieView from 'lottie-react-native';
 import { ConsumoContext } from "@/contexts/ConsumoContext";
+
+type TarifaCode = keyof typeof tarifas;
 
 const HomeScreen = () => {
   const { user } = useContext(AuthContext);
-  const { consumoDelDia, horaActualizacion, cargando, setConsumoDelDia, setHoraActualizacion, setCargando } = useContext(ConsumoContext);
+  const { consumoDelDia, horaActualizacion } = useContext(ConsumoContext);
 
   const { tarifas: tarifasDisponibles } = mockData;
 
   const currentDate = dayjs().locale("es").format("D [de] MMMM [del] YYYY");
-  const [selectedTarifa, setSelectedTarifa] = React.useState(
-    tarifasDisponibles.length ? tarifasDisponibles[0].code : "DA"
-  );
+  const [selectedTarifa, setSelectedTarifa] = React.useState<TarifaCode>('DA');
+
 
   const selectedTarifaCode = selectedTarifa || "DA";
 
-  // Calcular rangos y color dinámico
   const rangos = {
-    B: 0, IL: 0, IM: 0, IH: 0, H: 0, S: 0,
     ...calcularRangosConsumo(consumoDelDia, selectedTarifaCode, tarifas)
   };
   const colorDinamico = getColorPorRango(consumoDelDia, selectedTarifaCode, tarifas);
 
   const limiteConsumo = tarifas[selectedTarifaCode].slice(0, 5).reduce((a, b) => a + b, 0);
   const totalAPagar = calcularTotalAPagar(consumoDelDia, selectedTarifaCode, tarifas, precios);
-
-  if (cargando) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Image source={require("../../assets/img/logo_udc.png")} style={styles.loadingLogo} />
-        <LottieView
-          source={require("../../assets/animations/agua_lottie.json")}
-          autoPlay
-          loop
-          style={{ width: 200, height: 200 }}
-        />
-        <Text style={styles.loadingText}>Cargando consumo en tiempo real...</Text>
-      </View>
-    );
-  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -62,7 +45,7 @@ const HomeScreen = () => {
           <Picker
             placeholder="Selecciona una tarifa"
             value={selectedTarifa}
-            onChange={setSelectedTarifa}
+            onChange={setSelectedTarifa as any}
             topBarProps={{ title: "Selecciona una tarifa" }}
             style={styles.picker}
           >
@@ -101,21 +84,21 @@ const HomeScreen = () => {
       </View>
 
       <TarifaSegmentBar
-        consumo={consumoDelDia.toFixed(2)}
+        consumo={consumoDelDia.toFixed(2) as any}
         tarifaId={selectedTarifaCode}
-        rangos={tarifas[selectedTarifaCode]}
+        rangos={tarifas[selectedTarifaCode] as any}
       />
 
       {rangos?.S > 0 && (
-        <AlertSection mensajes={["El consumo actual supera los límites permitidos"]} tipo="ALTO" />
+        <AlertSection mensajes={["El consumo actual supera los límites permitidos"] as any} tipo="ALTO" />
       )}
 
       {rangos?.H > 0 && rangos?.S === 0 && (
-        <AlertSection mensajes={["Estás en la zona alta de consumo. Considera reducirlo."]} tipo="MEDIO" />
+        <AlertSection mensajes={["Estás en la zona alta de consumo. Considera reducirlo."] as any} tipo="MEDIO" />
       )}
 
       {rangos?.B > 0 && rangos?.IL === 0 && (
-        <AlertSection mensajes={["Buen trabajo, consumo dentro del rango básico."]} tipo="BAJO" />
+        <AlertSection mensajes={["Buen trabajo, consumo dentro del rango básico."] as any} tipo="BAJO" />
       )}
     </ScrollView>
   );
