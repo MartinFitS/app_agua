@@ -54,7 +54,7 @@ const HeaderSection = ({ tipoFactura }: Props) => {
     <View style={styles.header}>
       <Ionicons name="information-circle-outline" size={24} color="black" />
       <TouchableOpacity style={styles.button} onPress={descargarFactura}>
-        <Text style={styles.buttonText}>Descargar factura</Text>
+        <Text style={styles.buttonText}>Descargar resumen</Text>
       </TouchableOpacity>
     </View>
   );

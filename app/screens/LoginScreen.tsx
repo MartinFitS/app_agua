@@ -14,26 +14,25 @@ import { TextInput, Button, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { login } from "../../services/authService";
-import { AuthContext } from "@/contexts/AuthContext"; 
+import { AuthContext } from "@/contexts/AuthContext";
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation() as any;
   const [correo_institucional, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secureText, setSecureText] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const { login: loginToContext } = useContext(AuthContext);
 
-
   const handleLogin = async () => {
     try {
       const response = await login(correo_institucional, password);
       setErrorMessage("");
-  
+
       await loginToContext(response.user, response.access_token);
-  
+
       navigation.navigate("Main");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error.response?.data || error.message);
       const msg = error.response?.data?.message || "Error al iniciar sesión.";
       setErrorMessage(msg);
@@ -53,14 +52,14 @@ const LoginScreen = () => {
           />
 
           <TextInput
-            label="correo_institucional"
+            label="Correo Institucional"
             value={correo_institucional}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
             style={styles.input}
-            theme={{ colors: { primary: "#1D61E7", outline: "#adaba3" } }}
             mode="outlined"
+            textColor="#000"
           />
 
           <View style={styles.passwordContainer}>
@@ -72,6 +71,7 @@ const LoginScreen = () => {
               style={[styles.input, { flex: 1 }]}
               theme={{ colors: { primary: "#1D61E7", outline: "#adaba3" } }}
               mode="outlined"
+              textColor="#000"
             />
             <TouchableOpacity
               onPress={() => setSecureText(!secureText)}
@@ -98,9 +98,19 @@ const LoginScreen = () => {
               </Text>
             </View>
           </View>
-
           {errorMessage !== "" && (
-            <Text style={styles.errorText}>{errorMessage}</Text>
+            <View style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              width: "100%",
+              marginTop: 5,
+              paddingLeft: 0,        // eliminar padding izquierdo si hay
+            }}>
+              <Text style={[styles.errorText, { marginLeft: 0, padding: 0 }]}>
+                Usuario y/o contraseña incorrectos.
+              </Text>
+            </View>
           )}
 
           <Button
@@ -117,7 +127,7 @@ const LoginScreen = () => {
               ¿No tienes cuenta?{" "}
               <Text
                 style={styles.registerLink}
-                onPress={() => navigation.navigate("Register")} // Cambia "Register" por la ruta correspondiente
+                onPress={() => navigation.navigate("Register")}
               >
                 Regístrate aquí
               </Text>
@@ -211,7 +221,7 @@ const styles = StyleSheet.create({
   registerLink: {
     color: "#1D61E7",
     fontWeight: "bold",
-  }  
+  }
 });
 
 export default LoginScreen;
