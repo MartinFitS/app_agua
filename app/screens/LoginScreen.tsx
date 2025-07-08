@@ -98,9 +98,19 @@ const LoginScreen = () => {
               </Text>
             </View>
           </View>
-
           {errorMessage !== "" && (
-            <Text style={styles.errorText}>{errorMessage}</Text>
+            <View style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              width: "100%",
+              marginTop: 5,
+              paddingLeft: 0,        // eliminar padding izquierdo si hay
+            }}>
+              <Text style={[styles.errorText, { marginLeft: 0, padding: 0 }]}>
+                Usuario y/o contraseña incorrectos.
+              </Text>
+            </View>
           )}
 
           <Button

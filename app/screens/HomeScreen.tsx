@@ -38,7 +38,7 @@ const HomeScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={require("../../assets/img/logo_udc.png")} style={styles.logo} />
-      <Text style={styles.saludo}> Bienvenida, {user?.username ?? "Invitado"} 👋</Text>
+      <Text style={styles.saludo}> Bienvenido, {user?.username ?? "Invitado"} 👋</Text>
 
       <View style={styles.tarifaRow}>
         <View style={styles.selectContainer}>
