@@ -1,50 +1,38 @@
-# Welcome to your Expo app 👋
+# App for water consumption in FIE
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+- @MartinFitS
+- @arosac.rc
 
-## Get started
+## Tecnologies
 
-1. Install dependencies
+- React Native
+- Typescript
 
-   ```bash
-   npm install
-   ```
+# Goal of the app
 
-2. Start the app
+Track the water consumption in the University of colima campus "El Naranjo" for the for the Faculty of Electromechanical Engineering.
 
-   ```bash
-    npx expo start
-   ```
+This app was made for Serna Martín and Rosas Ariel for their SSC and his tutor was the Dr. Ramón Octavio Jiménez Betancourt.
 
-In the output, you'll find options to open the app in a
+# Screens
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Login
+  <img width="1440" alt="image" src="https://github.com/user-attachments/assets/8ed2fc67-7959-4d83-aa13-f1a72871b056" />
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Register
+  <img width="1440" alt="image" src="https://github.com/user-attachments/assets/569bd9ed-dd35-487f-bead-a5d46b0e71b1" />
 
-## Get a fresh project
+- HomeScreen
+  <img width="1440" alt="image" src="https://github.com/user-attachments/assets/957530c7-70ec-4c17-8dd8-01298816b186" />
 
-When you're ready, run:
+- ConsumptionScreen
+  <img width="1440" alt="image" src="https://github.com/user-attachments/assets/966625b4-68e0-4da2-a2a0-598833c06479" />
 
-```bash
-npm run reset-project
-```
+- ForecastScreen
+  <img width="1440" alt="image" src="https://github.com/user-attachments/assets/20d004a3-af3a-4a94-ab38-fb211e0b59d1" />
+  
+- ProfileScreen
+  <img width="1440" alt="image" src="https://github.com/user-attachments/assets/873930cb-c205-4c7f-8e39-0bb8e6c2aacd" />
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
