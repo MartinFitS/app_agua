@@ -1,7 +1,7 @@
 # App for water consumption in FIE
 
 - @MartinFitS
-- @arosac.rc
+- @arielrosasc
 
 ## Tecnologies
 
