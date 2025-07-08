@@ -33,7 +33,7 @@ const HeaderSection = ({ tipoFactura }: Props) => {
         reader.onloadend = async () => {
           const base64data = reader.result?.toString().split(',')[1];
     
-          const path = FileSystem.documentDirectory + `factura-${tipoFactura}.pdf`;
+          const path = FileSystem.documentDirectory + `Reporte-${tipoFactura}.pdf`;
           await FileSystem.writeAsStringAsync(path, base64data!, {
             encoding: FileSystem.EncodingType.Base64,
           });
