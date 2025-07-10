@@ -8,40 +8,28 @@
       "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "image": "default"
+        "image": "ubuntu-22.04-jdk-17-ndk-r26b",
+        "ndkVersion": "26.2.11394342"
       }
     },
     "preview": {
       "android": {
         "buildType": "apk",
-        "image": "default"
+        "image": "ubuntu-22.04-jdk-17-ndk-r26b",
+        "ndkVersion": "26.2.11394342"
       },
       "distribution": "internal"
     },
     "production": {
       "android": {
         "buildType": "app-bundle",
-        "image": "default"
+        "image": "ubuntu-22.04-jdk-17-ndk-r26b",
+        "ndkVersion": "26.2.11394342"
       },
       "autoIncrement": true
     }
   },
   "submit": {
     "production": {}
-  },
-  "extra": {
-    "eas": {
-      "projectId": "7b49b8c6-0bfa-492e-8178-bc06e2ea7801"
-    }
-  },
-  "expo": {
-    "android": {
-      "package": "com.mserna.appagua"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "7b49b8c6-0bfa-492e-8178-bc06e2ea7801"
-      }
-    }
   }
 }
