@@ -1,31 +1,17 @@
 {
   "cli": {
-    "version": ">= 16.14.1",
+    "version": ">= 16.13.4",
     "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "android": {
-        "image": "ubuntu-22.04-jdk-17-ndk-r26b",
-        "ndkVersion": "26.2.11394342"
-      }
+      "distribution": "internal"
     },
     "preview": {
-      "android": {
-        "buildType": "apk",
-        "image": "ubuntu-22.04-jdk-17-ndk-r26b",
-        "ndkVersion": "26.2.11394342"
-      },
       "distribution": "internal"
     },
     "production": {
-      "android": {
-        "buildType": "app-bundle",
-        "image": "ubuntu-22.04-jdk-17-ndk-r26b",
-        "ndkVersion": "26.2.11394342"
-      },
       "autoIncrement": true
     }
   },
