@@ -11,7 +11,11 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-, "app/screens/VictoryPie.tsx", "components/ConsumptionChart.js", "components/HeaderSection.tsx", "components/PeriodSelector.js", "components/AlertSection.js", "assets/CalcularTotalAPagar.js"  ]
+    "app/screens/VictoryPie.tsx",
+    "components/ConsumptionChart.js",
+    "components/HeaderSection.tsx",
+    "components/PeriodSelector.js",
+    "components/AlertSection.js",
+    "assets/CalcularTotalAPagar.js"
+  ]
 }
