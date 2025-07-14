@@ -4,6 +4,9 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { TextInput, Button, Text } from "react-native-paper";
@@ -75,122 +78,133 @@ const RegisterScreen = () => {
     }
   };
 
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Crear cuenta</Text>
-
-      <TouchableOpacity onPress={handlePickImage} style={styles.avatarWrapper}>
-        {imageBase64 ? (
-          <Image source={{ uri: imageBase64 }} style={styles.avatar} />
-        ) : (
-          <View style={styles.avatarPlaceholder}>
-            <Text style={styles.avatarText}>+</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-
-      <Text style={styles.changePhoto}>Subir Foto</Text>
-
-      <TextInput
-        label="Nombre de usuario"
-        value={username}
-        onChangeText={setUsername}
-        style={styles.input}
-        mode="outlined"
-        textColor="#000"
-
-      />
-
-      <TextInput
-        label="Correo institucional"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        style={styles.input}
-        mode="outlined"
-        textColor="#000"
-
-      />
-
-      <View style={styles.passwordContainer}>
-        <TextInput
-          label="Contraseña"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={secureText}
-          style={[styles.input, { flex: 1 }]}
-          mode="outlined"
-          textColor="#000"
-
-        />
-        <TouchableOpacity
-          style={styles.eyeIcon}
-          onPress={() => setSecureText(!secureText)}
-        >
-          <Ionicons
-            name={secureText ? "eye-off" : "eye"}
-            size={24}
-            color="#999"
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.passwordContainer}>
-        <TextInput
-          label="Confirmar contraseña"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry={secureConfirm}
-          style={[styles.input, { flex: 1 }]}
-          mode="outlined"
-          textColor="#000"
-
-        />
-        <TouchableOpacity
-          style={styles.eyeIcon}
-          onPress={() => setSecureConfirm(!secureConfirm)}
-        >
-          <Ionicons
-            name={secureConfirm ? "eye-off" : "eye"}
-            size={24}
-            color="#999"
-          />
-        </TouchableOpacity>
-      </View>
-
-      <Button
-        mode="contained"
-        style={styles.button}
-        textColor="white"
-        onPress={handleRegister}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
-        Registrarse
-      </Button>
+        <View style={styles.container}>
+          <Text style={styles.title}>Crear cuenta</Text>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-        <Text style={styles.loginLink}>
-          ¿Ya tienes cuenta?{" "}
-          <Text style={styles.loginBold}>Inicia sesión</Text>
-        </Text>
-      </TouchableOpacity>
-    </View>
+          <TouchableOpacity onPress={handlePickImage} style={styles.avatarWrapper}>
+            {imageBase64 ? (
+              <Image source={{ uri: imageBase64 }} style={styles.avatar} />
+            ) : (
+              <View style={styles.avatarPlaceholder}>
+                <Text style={styles.avatarText}>+</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+
+          <Text style={styles.changePhoto}>Subir Foto</Text>
+
+          <TextInput
+            label="Nombre de usuario"
+            value={username}
+            onChangeText={setUsername}
+            style={styles.input}
+            mode="outlined"
+            textColor="#000"
+          />
+
+          <TextInput
+            label="Correo institucional"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            style={styles.input}
+            mode="outlined"
+            textColor="#000"
+          />
+
+          <View style={styles.passwordContainer}>
+            <TextInput
+              label="Contraseña"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={secureText}
+              style={[styles.input, { flex: 1 }]}
+              mode="outlined"
+              textColor="#000"
+            />
+            <TouchableOpacity
+              style={styles.eyeIcon}
+              onPress={() => setSecureText(!secureText)}
+            >
+              <Ionicons
+                name={secureText ? "eye-off" : "eye"}
+                size={24}
+                color="#999"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.passwordContainer}>
+            <TextInput
+              label="Confirmar contraseña"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry={secureConfirm}
+              style={[styles.input, { flex: 1 }]}
+              mode="outlined"
+              textColor="#000"
+            />
+            <TouchableOpacity
+              style={styles.eyeIcon}
+              onPress={() => setSecureConfirm(!secureConfirm)}
+            >
+              <Ionicons
+                name={secureConfirm ? "eye-off" : "eye"}
+                size={24}
+                color="#999"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <Button
+            mode="contained"
+            style={styles.button}
+            textColor="white"
+            onPress={handleRegister}
+          >
+            Registrarse
+          </Button>
+
+          <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.loginLink}>
+              ¿Ya tienes cuenta?{" "}
+              <Text style={styles.loginBold}>Inicia sesión</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
     padding: 40,
     backgroundColor: "#fff",
+    alignItems: "center",
+  },
+  container: {
+    width: "100%",
     alignItems: "center",
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 30,
-    marginTop: 43,
     color: "#333",
   },
   avatarWrapper: {
